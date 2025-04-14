@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+main {
+	background-color: #d5f0ce;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-border {
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 4px;
+  border-color: #10b981; /* Customize to match your theme */
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
