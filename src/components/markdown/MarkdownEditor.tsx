@@ -193,6 +193,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 						Cancel
 					</button>
 					<button
+					data-testid="save-button"
 						type="submit"
 						className={`flex items-center gap-1 px-4 py-2 rounded-md transition-colors duration-300 ${
 							isEditing
