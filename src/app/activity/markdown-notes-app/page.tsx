@@ -12,15 +12,14 @@ import Modal from "@/components/markdown/Modal";
 import NoteDetail from "@/components/markdown/NoteDetail";
 import { ModalType, Note } from "@/types/notes";
 import { useState, useEffect } from "react";
-import NextTopLoader, { useTopLoader } from "nextjs-toploader";
+import { useTopLoader } from "nextjs-toploader";
 import ConfirmationDeleteModal from "@/components/ConfirmationModal";
 import SpinnerLoading from "@/components/SpinnerLoading";
-import { CiCirclePlus, CiClock1 } from "react-icons/ci";
-import { FaEdit, FaPlus } from "react-icons/fa";
-import IconWithTooltip from "@/components/IconWithTooltip";
-import { MdDelete } from "react-icons/md";
+import MarkdownHeader from "@/view/markdown/MarkDownHeader";
+import MarkdownNotes from "@/view/markdown/MarkdownNotes";
+import toast from "react-hot-toast";
 
-export default function Home() {
+export default function Markdown() {
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [selectedNote, setSelectedNote] = useState<Note | null>(null);
@@ -36,13 +35,16 @@ export default function Home() {
 	// Load notes
 	useEffect(() => {
 		const fetchNotes = async () => {
+			loader.start();
 			try {
 				const fetchedNotes = await getNotes();
 				setNotes(fetchedNotes);
+				loader.setProgress(0.5);
 			} catch (error) {
 				throw new Error();
 			} finally {
 				setLoading(false);
+				loader.done();
 			}
 		};
 
@@ -70,10 +72,14 @@ export default function Home() {
 
 	// Handle creating a new note
 	const handleCreateNote = async (title: string, content: string) => {
-		const newNote = await createNote(title, content);
-		if (newNote) {
-			setNotes([newNote, ...notes]);
-			closeModal();
+		try {
+			const newNote = await createNote(title, content);
+			if (newNote) {
+				setNotes([newNote, ...notes]);
+				closeModal();
+			}
+		} catch (error) {
+			throw new Error();
 		}
 	};
 
@@ -101,16 +107,24 @@ export default function Home() {
 
 	const confirmDeleteNote = async () => {
 		if (!noteToDeleteId) return;
-
-		const success = await deleteNote(noteToDeleteId);
-		if (success) {
-			setNotes(notes.filter((note) => note.id !== noteToDeleteId));
-			if (selectedNote && selectedNote.id === noteToDeleteId) {
-				closeModal();
+		loader.start();
+		try {
+			loader.setProgress(0.5);
+			const success = await deleteNote(noteToDeleteId);
+			if (success) {
+				setNotes(notes.filter((note) => note.id !== noteToDeleteId));
+				if (selectedNote && selectedNote.id === noteToDeleteId) {
+					closeModal();
+				}
 			}
+			setNoteToDeleteId(null);
+			setShowDeleteModal(false);
+		} catch (error) {
+			throw new Error();
+		} finally {
+			toast.success("Delete Success!");
+			loader.done();
 		}
-		setNoteToDeleteId(null);
-		setShowDeleteModal(false);
 	};
 
 	// Open a note for viewing
@@ -122,7 +136,7 @@ export default function Home() {
 				setSelectedNote(note);
 				setModalType("view");
 			}
-			loader.setProgress(.5);
+			loader.setProgress(0.5);
 		} catch (error) {
 			throw new Error();
 		} finally {
@@ -159,41 +173,15 @@ export default function Home() {
 	);
 
 	return (
-		<div className="max-w-6xl mx-auto px-4 py-8">
+		<div className="max-w-[screen] overflow-hidden mx-auto px-4 py-8">
 			{/* Header */}
-			<div className="flex flex-col sm:flex-row justify-between items-center mb-8">
-				<h1 className="text-3xl font-bold mb-4 sm:mb-0 text-green-950">
-					Markdown Notes
-				</h1>
+			<MarkdownHeader
+				searchQuery={searchQuery}
+				setSearchQuery={setSearchQuery}
+				openCreateModal={openCreateModal}
+			/>
 
-				<IconWithTooltip
-					icon={<FaPlus size={20} />}
-					className="text-white bg-green-600 hover:bg-green-700 p-2 rounded-md transition-colors duration-300 cursor-pointer"
-					text="New Note"
-					onClick={openCreateModal}
-				/>
-			</div>
-
-			{/* Search Bar */}
-			<div className="mb-6">
-				<form
-					onSubmit={(e) => {
-						e.preventDefault(); // Prevent the default form submission
-						// You can handle the search here if you need
-						console.log("Search query submitted:", searchQuery);
-					}}
-				>
-					<input
-						type="text"
-						placeholder="🔍 Search notes..."
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						className="w-full px-4 py-2 border-b-2 border-green-800 focus:outline-none transition-all duration-300"
-					/>
-				</form>
-			</div>
-
-			{/* Notes Grid */}
+			{/* Notes */}
 			{loading ? (
 				<SpinnerLoading />
 			) : filteredNotes.length === 0 ? (
@@ -204,60 +192,16 @@ export default function Home() {
 				</div>
 			) : (
 				<div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-				{filteredNotes.map((note) => (
-					<div
-						key={note.id}
-						className="break-inside-avoid border border-green-100 rounded-lg p-4 bg-white shadow hover:shadow-xl hover:border-green-800 transition-shadow duration-300 delay-75 cursor-pointer"
-						onClick={() => openViewModal(note.id)}
-					>
-						<h3 className="font-semibold text-lg mb-2 truncate text-green-950">
-							{note.title}
-						</h3>
-						<p className="text-gray-600 text-sm mb-3 line-clamp-3">
-							{note.content.substring(0, 120)}
-							{note.content.length > 120 ? "..." : ""}
-						</p>
-						<div className="flex justify-between items-center text-xs text-gray-500">
-							<div className="flex gap-1 items-center">
-								<CiClock1 size={20} />
-								<p>
-									Updated:{" "}
-									{new Date(note.updated_at).toLocaleDateString()}
-								</p>
-							</div>
-							<div className="flex space-x-2">
-								<IconWithTooltip
-									icon={
-										<FaEdit
-											size={20}
-											onClick={(e) => {
-												e.stopPropagation();
-												openEditModal(note);
-											}}
-										/>
-									}
-									className="text-black/50 hover:text-green-950 transition-colors duration-300"
-									text="Edit note"
-								/>
-								<IconWithTooltip
-									icon={
-										<MdDelete
-											size={20}
-											onClick={(e) => {
-												e.stopPropagation();
-												handleDeleteNote(note.id);
-											}}
-										/>
-									}
-									className="text-black/50 hover:text-red-700 transition-colors duration-300"
-									text="Delete note"
-								/>
-							</div>
-						</div>
-					</div>
-				))}
-			</div>
-			
+					{filteredNotes.map((note) => (
+						<MarkdownNotes
+							key={note.id}
+							note={note}
+							onViewNote={openViewModal}
+							onEditNote={openEditModal}
+							onDeleteNote={handleDeleteNote}
+						/>
+					))}
+				</div>
 			)}
 
 			{/* Modals */}
@@ -287,7 +231,6 @@ export default function Home() {
 						note={selectedNote}
 						onEdit={() => setModalType("edit")}
 						onClose={closeModal}
-						// isSetVisible={isSetVisible}
 					/>
 				)}
 			</Modal>
@@ -320,7 +263,6 @@ export default function Home() {
 						initialContent={selectedNote.content}
 						onSave={handleUpdateNote}
 						onCancel={() => setModalType("view")}
-						isEditing
 					/>
 				)}
 			</Modal>

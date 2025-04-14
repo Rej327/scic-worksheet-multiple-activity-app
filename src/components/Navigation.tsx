@@ -93,7 +93,6 @@ export default function Navigation({
 }) {
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [isLogout, setIslogout] = useState<boolean>(false);
-	const [loading, setLoading] = useState<boolean>(false);
 
 	const route = useRouter();
 
@@ -104,13 +103,11 @@ export default function Navigation({
 
 	const handleLogout = async () => {
 		try {
-			setLoading(true);
 			await supabase.auth.signOut();
 			route.push("/");
 		} catch {
 			toast.error("Error on logout");
 		} finally {
-			setLoading(false);
 		}
 	};
 
@@ -153,7 +150,7 @@ export default function Navigation({
 		<div className="flex flex-col md:flex-row min-h-screen">
 			<aside className="w-full md:w-[15vw] md:fixed z-20">
 				<div
-					className="relative h-[400px] md:h-screen text-white flex flex-col justify-between"
+					className="relative h-[550px] md:h-screen text-white flex flex-col justify-between"
 					style={{
 						backgroundImage: `url(${background.src})`,
 						backgroundSize: "cover",

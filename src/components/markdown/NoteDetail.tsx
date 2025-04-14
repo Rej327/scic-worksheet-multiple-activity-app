@@ -1,18 +1,26 @@
 "use client";
 
-import { Note } from "@/types/notes";
-import { useState } from "react";
+import { Note, NoteDetailProps } from "@/types/notes";
+import { useState, useEffect } from "react";
 import { FaDrawPolygon, FaEye } from "react-icons/fa";
-import ReactMarkdown from "react-markdown";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
 
-interface NoteDetailProps {
-	note: Note;
-	onEdit: () => void;
-	onClose: () => void;
-}
+
 
 export default function NoteDetail({ note, onEdit, onClose }: NoteDetailProps) {
 	const [mode, setMode] = useState<"preview" | "raw">("preview");
+	const [mdxContent, setMdxContent] = useState<MDXRemoteSerializeResult>();
+
+	// Use useEffect to serialize markdown asynchronously
+	useEffect(() => {
+		const getSerializedContent = async () => {
+			const serializedContent = await serialize(note.content); // Await the promise
+			setMdxContent(serializedContent); // Set the serialized content to state
+		};
+
+		getSerializedContent();
+	}, [note.content]);
 
 	return (
 		<div className="space-y-4">
@@ -50,7 +58,8 @@ export default function NoteDetail({ note, onEdit, onClose }: NoteDetailProps) {
 
 			{mode === "preview" ? (
 				<div className="border border-gray-300 shadow-md rounded-md p-4 prose max-w-none">
-					<ReactMarkdown>{note.content}</ReactMarkdown>
+					{/* Only render if mdxContent is available */}
+					{mdxContent && <MDXRemote {...mdxContent} />}
 				</div>
 			) : (
 				<pre className="border border-gray-300 shadow-md rounded-md p-4 bg-green-50 font-mono text-sm overflow-x-auto">

@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaEdit, FaEye } from "react-icons/fa";
-import ReactMarkdown from "react-markdown";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import SpinnerLoading from "../SpinnerLoading";
+import { useTopLoader } from "nextjs-toploader";
 
 interface MarkdownEditorProps {
 	initialContent?: string;
@@ -13,28 +16,40 @@ interface MarkdownEditorProps {
 	isEditing?: boolean;
 }
 
-export default function MarkdownEditor({
+const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 	initialContent = "",
 	initialTitle = "",
 	onSave,
 	onCancel,
-	isEditing = false,
-}: MarkdownEditorProps) {
+}) => {
 	const [title, setTitle] = useState(initialTitle);
 	const [content, setContent] = useState(initialContent);
 	const [mode, setMode] = useState<"edit" | "preview">("edit");
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [errors, setErrors] = useState<{
-		title?: string;
-		content?: string;
-	}>({});
+	const [isEditing, setIsEditing] = useState(false);
+	const [errors, setErrors] = useState<{ title?: string; content?: string }>(
+		{}
+	);
+	const [mdxContent, setMdxContent] =
+		useState<MDXRemoteSerializeResult | null>(null);
+	const loader = useTopLoader();
+
+	// Serialize Markdown to MDX for preview mode
+	useEffect(() => {
+		const convertMarkdownToMdx = async () => {
+			if (mode === "preview") {
+				const mdx = await serialize(content || "");
+				setMdxContent(mdx);
+			}
+		};
+		convertMarkdownToMdx();
+	}, [content, mode]);
 
 	const validate = () => {
 		const newErrors: typeof errors = {};
 		if (!title) newErrors.title = "* Title is required.";
 		else if (title.length < 2)
-			newErrors.title = "* Content must be at least 2 characters.";
-
+			newErrors.title = "* Title must be at least 2 characters.";
 		if (!content) newErrors.content = "* Content is required.";
 		else if (content.length < 5)
 			newErrors.content = "* Content must be at least 5 characters.";
@@ -46,22 +61,28 @@ export default function MarkdownEditor({
 				setErrors({});
 			}, 3000);
 		}
-
+		loader.done();
 		return Object.keys(newErrors).length === 0;
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		loader.start();
 		if (!validate()) return;
+
 		setIsSubmitting(true);
+		setIsEditing(true);
+		loader.setProgress(0.5);
 		try {
-			onSave(title, content);
-			setIsSubmitting(false);
-			toast.success("Note saved!");
+			await onSave(title, content);
 		} catch (error) {
 			console.error("Error saving note:", error);
+			toast.error("Note failed to add!");
+		} finally {
 			setIsSubmitting(false);
-			toast.success("Note save failed!");
+			setIsEditing(false);
+			loader.done();
+			toast.success("New note added!");
 		}
 	};
 
@@ -110,11 +131,12 @@ export default function MarkdownEditor({
 						)}
 					</div>
 					<input
+						data-testid="note-title"
 						type="text"
 						id="title"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-900 shadow-md transition-all duration-300"
+						className="w-full px-3 py-2 border border-gray-300 rounded-md"
 						placeholder="Note title"
 					/>
 				</div>
@@ -135,53 +157,58 @@ export default function MarkdownEditor({
 							)}
 						</div>
 						<textarea
+							data-testid="note-content"
 							id="content"
 							value={content}
 							onChange={(e) => setContent(e.target.value)}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md min-h-[300px] font-mono focus:outline-none focus:ring-2 focus:ring-green-900 shadow-md transition-all duration-300"
+							className="w-full px-3 py-2 border border-gray-300 rounded-md min-h-[300px] font-mono"
 							placeholder="Write your note in Markdown..."
 						/>
 					</div>
 				) : (
-					<div>
+					<div className="border border-gray-300 rounded-md p-4 min-h-[300px] prose max-w-none shadow-md">
+						<h3 className="text-lg font-bold text-green-950">
+							{title}
+						</h3>
 						{errors.content && (
 							<p className="text-red-500 text-sm mt-1 text-right">
 								{errors.content}
 							</p>
 						)}
-						<div className="border border-gray-300 rounded-md p-4 min-h-[300px] prose max-w-none shadow-md">
-							<h3 className="text-lg font-bold text-green-950">
-								{title}
-							</h3>
-							<ReactMarkdown>{content}</ReactMarkdown>
-						</div>
+						{mdxContent ? (
+							<MDXRemote {...mdxContent} />
+						) : (
+							<SpinnerLoading />
+						)}
 					</div>
 				)}
 
 				<div className="flex justify-end space-x-2">
 					<button
+						data-testid="cancel-button"
 						type="button"
 						onClick={onCancel}
-						className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md transition-colors duration-300 cursor-pointer"
-						disabled={isSubmitting}
+						className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md cursor-pointer"
 					>
 						Cancel
 					</button>
 					<button
 						type="submit"
-						className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-300 cursor-pointer"
-						disabled={isSubmitting}
+						className={`flex items-center gap-1 px-4 py-2 rounded-md transition-colors duration-300 ${
+							isEditing
+								? "bg-gray-400 cursor-not-allowed"
+								: "bg-green-600 hover:bg-green-700 cursor-pointer"
+						} text-white`}
+						disabled={isEditing}
 					>
 						{isSubmitting
-							? isEditing
-								? "Updating "
-								: "Saving "
+							? isEditing && "Saving "
 							: isEditing
 							? "Update Note"
 							: "Save Note"}
 						{isSubmitting && (
 							<svg
-								className="animate-spin h-5 w-5 text-white"
+								className="animate-spin h-4 w-4 text-white"
 								xmlns="http://www.w3.org/2000/svg"
 								fill="none"
 								viewBox="0 0 24 24"
@@ -206,4 +233,6 @@ export default function MarkdownEditor({
 			</form>
 		</div>
 	);
-}
+};
+
+export default MarkdownEditor;
