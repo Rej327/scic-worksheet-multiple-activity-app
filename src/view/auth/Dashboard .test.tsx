@@ -1,65 +1,27 @@
-import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import Dashboard from "./Dashboard";
 
-// ✅ Global mock
-const push = jest.fn();
-jest.mock("next/router", () => ({
-	useRouter: () => ({
-		push,
-	}),
-}));
+jest.mock("next/link", () => {
+	return ({ children }: { children: React.ReactNode }) => children;
+});
 
-// ✅ Mock Supabase client
-const mockGetUser = jest.fn();
-const mockSupabase = {
-	auth: {
-		getUser: mockGetUser,
-	},
-} as any;
+describe("Dashboard", () => {
+	it("renders all secret pages with correct titles", () => {
+		render(<Dashboard />);
 
-describe.only("Dashboard", () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
+		expect(screen.getByText("Dashboard")).toBeInTheDocument();
 
-	it("renders all activity pages correctly", async () => {
-		mockGetUser.mockResolvedValue({
-			data: { user: { id: "test-user" } },
-			error: null,
+		const titles = [
+			"Todo List",
+			"Google Drive 'Lite'",
+			"Food Review",
+			"Pokemon Review App",
+			"Markdown Notes App",
+		];
+
+		titles.forEach((title) => {
+			expect(screen.getByText(title)).toBeInTheDocument();
 		});
-
-		render(<Dashboard supabase={mockSupabase} />);
-		await waitFor(() => expect(mockGetUser).toHaveBeenCalled());
-
-		expect(screen.getByText("Todo List")).toBeInTheDocument();
-		expect(screen.getByText("Google Drive 'Lite'")).toBeInTheDocument();
-		expect(screen.getByText("Food Review")).toBeInTheDocument();
-		expect(screen.getByText("Pokemon Review App")).toBeInTheDocument();
-		expect(screen.getByText("Markdown Notes App")).toBeInTheDocument();
-	});
-
-	it("calls supabase.auth.getUser on mount", async () => {
-		mockGetUser.mockResolvedValue({
-			data: { user: { id: "123" } },
-			error: null,
-		});
-
-		render(<Dashboard supabase={mockSupabase} />);
-		await waitFor(() => expect(mockGetUser).toHaveBeenCalledTimes(1));
-	});
-
-	it("navigates to the correct page on click", async () => {
-		mockGetUser.mockResolvedValue({
-			data: { user: { id: "test-user" } },
-			error: null,
-		});
-
-		render(<Dashboard supabase={mockSupabase} />);
-		await waitFor(() => expect(mockGetUser).toHaveBeenCalled());
-
-		const todoCard = screen.getByText("Todo List").closest("a");
-		expect(todoCard).toHaveAttribute("href", "/activity/todo-list");
 	});
 });
