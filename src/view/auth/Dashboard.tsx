@@ -1,5 +1,6 @@
 "use client";
 
+import MainHeader from "@/components/tools/MainHeader";
 import Link from "next/link";
 import React from "react";
 import { AiFillFileMarkdown } from "react-icons/ai";
@@ -43,12 +44,7 @@ export default function Dashboard() {
 
 	return (
 		<div className="w-auto">
-			<div className="flex items-center gap-2 my-2 text-green-950">
-				<FaHome size={25} className="text-green-950" />
-				<h1 className="text-2xl uppercase font-semibold tracking-wider">
-					Dashboard
-				</h1>
-			</div>
+			<MainHeader icon={<FaHome size={30} />} title="Dashboard" />
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
 				{secretPages.map((page) => (
 					<Link href={page.link} key={page.id}>

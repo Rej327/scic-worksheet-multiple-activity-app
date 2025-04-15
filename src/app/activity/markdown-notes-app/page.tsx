@@ -18,6 +18,8 @@ import SpinnerLoading from "@/components/loader/SpinnerLoading";
 import MarkdownHeader from "@/view/markdown/MarkDownHeader";
 import MarkdownNotes from "@/view/markdown/MarkdownNotes";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/helper/connection";
 
 export default function Markdown() {
 	const [notes, setNotes] = useState<Note[]>([]);
@@ -35,6 +37,21 @@ export default function Markdown() {
 	const [isFetching, setIsFetching] = useState(false);
 	const observerRef = useRef<HTMLDivElement | null>(null);
 	const loader = useTopLoader();
+	const router = useRouter();
+
+	useEffect(() => {
+		loader.setProgress(0.25);
+		const checkUser = async () => {
+			const { data, error } = await supabase.auth.getUser();
+
+			if (error || !data.user) {
+				router.push("/");
+			}
+		};
+
+		checkUser();
+		loader.done();
+	}, [router]);
 
 	const fetchNotes = async (page: number) => {
 		setIsFetching(true);
@@ -86,8 +103,6 @@ export default function Markdown() {
 			throw new Error();
 		}
 	}, [page]);
-
-	////////////////////////
 
 	useEffect(() => {
 		const debounce = setTimeout(() => {

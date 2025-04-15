@@ -1,31 +1,22 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { supabase } from "@/helper/connection";
 import Navigation from "@/components/navigation/Navigation";
+import MainHeader from "@/components/tools/MainHeader";
+import { FaGoogleDrive } from "react-icons/fa";
 
-export default function SecretLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	const router = useRouter();
-	const [loading, setLoading] = useState(false);
+export const metadata = {
+	title: "Google Drive Lite | Multiple Activities App ",
+	description: "Google drive lite application (CRUD and sorting operation)",
+};
 
-	useEffect(() => {
-		const checkUser = async () => {
-			const { data, error } = await supabase.auth.getUser();
-
-			if (error || !data.user) {
-				router.push("/");
-			} else {
-				setLoading(false);
-			}
-		};
-
-		checkUser();
-	}, [router]);
-
-	return <Navigation>{children}</Navigation>;
+export default function layout({ children }: { children: React.ReactNode }) {
+	return (
+		<Navigation>
+			<header>
+				<MainHeader
+					icon={<FaGoogleDrive size={30} />}
+					title="Google Drive 'lite'"
+				/>
+			</header>
+			{children}
+		</Navigation>
+	);
 }

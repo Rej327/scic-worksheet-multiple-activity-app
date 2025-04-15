@@ -1,31 +1,23 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { supabase } from "@/helper/connection";
 import Navigation from "@/components/navigation/Navigation";
+import MainHeader from "@/components/tools/MainHeader";
+import { AiFillFileMarkdown } from "react-icons/ai";
 
-export default function SecretLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	const router = useRouter();
-	const [loading, setLoading] = useState(false);
+export const metadata = {
+	title: "Markdown Notes App | Multiple Activities App ",
+	description:
+		"Markdown notes application (CRUD markdwon note with raw preview)",
+};
 
-	useEffect(() => {
-		const checkUser = async () => {
-			const { data, error } = await supabase.auth.getUser();
-
-			if (error || !data.user) {
-				router.push("/");
-			} else {
-				setLoading(false);
-			}
-		};
-
-		checkUser();
-	}, [router]);
-
-	return <Navigation>{children}</Navigation>;
+export default function layout({ children }: { children: React.ReactNode }) {
+	return (
+		<Navigation>
+			<header>
+				<MainHeader
+					icon={<AiFillFileMarkdown size={30} />}
+					title="Markdown Notes"
+				/>
+			</header>
+			{children}
+		</Navigation>
+	);
 }
