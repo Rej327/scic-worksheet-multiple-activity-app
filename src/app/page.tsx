@@ -19,7 +19,7 @@ export default function Home() {
 
 		const { error } = await supabase
 			.from("profiles")
-			.upsert({ id: userId, full_name: fullName });
+			.upsert({ id: userId, full_name: fullName }, { onConflict: "id" });
 
 		if (error) {
 			console.error("Error saving profile:", error.message);
@@ -27,7 +27,6 @@ export default function Home() {
 			console.log("Profile saved successfully.");
 		}
 	};
-
 	useEffect(() => {
 		const fetchSession = async () => {
 			try {

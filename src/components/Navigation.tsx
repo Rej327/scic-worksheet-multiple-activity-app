@@ -14,12 +14,13 @@ import {
 	FaGoogleDrive,
 } from "react-icons/fa";
 import { background, scic_logo_white } from "../../public/assets";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import ConfirmationDeleteModal from "./ConfirmationModal";
 import { NavItemProps } from "@/types/navigation";
 import Image from "next/image";
 import { LuListTodo } from "react-icons/lu";
 import { MdCatchingPokemon, MdFastfood } from "react-icons/md";
+import { useTopLoader } from "nextjs-toploader";
 
 const NavItem: NavItemProps[] = [
 	{
@@ -95,6 +96,7 @@ export default function Navigation({
 	const [isLogout, setIslogout] = useState<boolean>(false);
 
 	const route = useRouter();
+	const loader = useTopLoader();
 
 	const handleLogoutModal = () => {
 		setIslogout(true);
@@ -102,12 +104,14 @@ export default function Navigation({
 	};
 
 	const handleLogout = async () => {
+		loader.start();
 		try {
 			await supabase.auth.signOut();
-			route.push("/");
 		} catch {
 			toast.error("Error on logout");
 		} finally {
+			loader.done();
+			route.push("/");
 		}
 	};
 
@@ -117,6 +121,7 @@ export default function Navigation({
 	};
 
 	const handleDelete = async () => {
+		loader.start();
 		const { data: userData, error: userError } =
 			await supabase.auth.getUser();
 
@@ -126,6 +131,7 @@ export default function Navigation({
 		}
 
 		const id = userData?.user?.id;
+		const email = userData?.user?.email;
 
 		if (!id) {
 			console.error("User ID is missing");
@@ -133,16 +139,19 @@ export default function Navigation({
 		}
 
 		try {
+			await supabase.auth.signOut();
 			const { error } = await supabase.auth.admin.deleteUser(id);
 			if (error) {
 				toast.error("Error deleting user");
 				return;
 			}
-
-			await supabase.auth.signOut();
-			location.reload();
 		} catch (error) {
 			toast.error("Unexpected error during user deletion:");
+		} finally {
+			if (email) {
+				toast.success(`Successfully delete account: ${email}`);
+			}
+			loader.done();
 		}
 	};
 

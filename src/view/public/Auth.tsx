@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { bg_auth, scic_logo } from "../../../public/assets";
 import Image from "next/image";
+import { useTopLoader } from "nextjs-toploader";
 
 interface DashboardProps {
 	supabase: SupabaseClient;
@@ -22,6 +23,7 @@ export default function Auth({ supabase }: DashboardProps) {
 		fullname?: string;
 	}>({});
 	const [loading, setLoading] = useState(false);
+	const loader = useTopLoader();
 
 	const validate = () => {
 		const newErrors: typeof errors = {};
@@ -51,6 +53,7 @@ export default function Auth({ supabase }: DashboardProps) {
 		e.preventDefault();
 		if (!validate()) return;
 		setLoading(true);
+		loader.start();
 
 		if (isRegistering) {
 			const { error } = await supabase.auth.signUp({
@@ -79,12 +82,14 @@ export default function Auth({ supabase }: DashboardProps) {
 			if (error) {
 				toast.error(error.message || "Login failed");
 				setLoading(false);
+				loader.done();
 				return;
 			}
 
 			toast.success("Login successful!");
 		}
 		setLoading(false);
+		loader.done();
 	};
 
 	return (
