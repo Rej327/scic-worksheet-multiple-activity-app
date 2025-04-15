@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import MarkdownNotes from "./MarkdownNotes"; // Adjust the import path as needed
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import IconWithTooltip from "@/components/IconWithTooltip";
+import IconWithTooltip from "@/components/tools/IconWithTooltip";
 
 // Mock the props functions
 const mockOnViewNote = jest.fn();

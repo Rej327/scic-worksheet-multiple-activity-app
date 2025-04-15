@@ -2,7 +2,7 @@ import React from "react";
 import { CiClock1 } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import IconWithTooltip from "@/components/IconWithTooltip";
+import IconWithTooltip from "@/components/tools/IconWithTooltip";
 import { NoteCardProps } from "@/types/markdown";
 
 const MarkdownNotes: React.FC<NoteCardProps> = ({

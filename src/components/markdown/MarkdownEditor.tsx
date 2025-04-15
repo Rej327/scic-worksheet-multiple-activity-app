@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { FaEdit, FaEye } from "react-icons/fa";
 import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import SpinnerLoading from "../SpinnerLoading";
+import SpinnerLoading from "@/components/loader/SpinnerLoading";
 import { useTopLoader } from "nextjs-toploader";
 
 interface MarkdownEditorProps {

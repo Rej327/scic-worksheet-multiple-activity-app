@@ -1,6 +1,6 @@
 "use client";
 
-import Navigation from "@/components/Navigation";
+import Navigation from "@/components/navigation/Navigation";
 import { supabase } from "@/helper/connection";
 import Loading from "@/helper/Loading";
 import Dashboard from "@/view/auth/Dashboard";
@@ -34,7 +34,10 @@ export default function Home() {
 			if (!data) {
 				const { error: upsertError } = await supabase
 					.from("profiles")
-					.upsert({ id: userId, full_name: fullName }, { onConflict: "id" });
+					.upsert(
+						{ id: userId, full_name: fullName },
+						{ onConflict: "id" }
+					);
 
 				if (upsertError) {
 					console.error("Error saving profile:", upsertError.message);

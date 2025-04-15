@@ -13,9 +13,9 @@ import {
 	FaTrashAlt,
 	FaGoogleDrive,
 } from "react-icons/fa";
-import { background, scic_logo_white } from "../../public/assets";
+import { background, scic_logo_white } from "../../../public/assets";
 import toast, { Toaster } from "react-hot-toast";
-import ConfirmationDeleteModal from "./ConfirmationModal";
+import ConfirmationDeleteModal from "@/components/modal/ConfirmationModal";
 import { NavItemProps } from "@/types/navigation";
 import Image from "next/image";
 import { LuListTodo } from "react-icons/lu";

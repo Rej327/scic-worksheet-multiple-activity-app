@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/helper/connection";
-import Navigation from "@/components/Navigation";
+import Navigation from "@/components/navigation/Navigation";
 
 export default function SecretLayout({
 	children,
@@ -26,7 +26,6 @@ export default function SecretLayout({
 
 		checkUser();
 	}, [router]);
-
 
 	return <Navigation>{children}</Navigation>;
 }

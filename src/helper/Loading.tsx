@@ -1,5 +1,5 @@
 import React from "react";
-import "../../public/assets/styles/loading.css";
+import "../../public/assets";
 
 export default function Loading({ loading }: { loading: boolean }) {
 	if (!loading) return null;
