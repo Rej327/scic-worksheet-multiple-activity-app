@@ -1,22 +1,13 @@
 "use client";
 
-import { useSession } from "@/context/SessionContext";
-import { SupabaseClient, User } from "@supabase/supabase-js";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import {
-	FaEdit,
-	FaEnvelope,
-	FaGoogleDrive,
-	FaHome,
-	FaUsers,
-} from "react-icons/fa";
+import React from "react";
+import { AiFillFileMarkdown } from "react-icons/ai";
+import { FaGoogleDrive, FaHome } from "react-icons/fa";
 import { LuListTodo } from "react-icons/lu";
 import { MdCatchingPokemon, MdFastfood } from "react-icons/md";
 
 export default function Dashboard() {
-	const { fullName, session } = useSession();
-
 	const secretPages = [
 		{
 			id: "1",
@@ -46,15 +37,18 @@ export default function Dashboard() {
 			id: "5",
 			title: "Markdown Notes App",
 			link: "/activity/markdown-notes-app",
-			icon: <FaUsers size={50} />,
+			icon: <AiFillFileMarkdown size={50} />,
 		},
 	];
 
 	return (
-		<div>
-			{session ? (
-				<p className="font-semibold text-xl">Hi {fullName}</p>
-			) : null}
+		<div className="w-auto">
+			<div className="flex items-center gap-2 my-2 text-green-950">
+				<FaHome size={25} className="text-green-950" />
+				<h1 className="text-2xl uppercase font-semibold tracking-wider">
+					Dashboard
+				</h1>
+			</div>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
 				{secretPages.map((page) => (
 					<Link href={page.link} key={page.id}>

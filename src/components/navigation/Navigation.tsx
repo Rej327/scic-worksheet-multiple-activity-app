@@ -4,23 +4,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/helper/connection";
-import {
-	FaHome,
-	FaEnvelope,
-	FaEdit,
-	FaUsers,
-	FaSignOutAlt,
-	FaTrashAlt,
-	FaGoogleDrive,
-} from "react-icons/fa";
+import { FaHome, FaGoogleDrive } from "react-icons/fa";
 import { background, scic_logo_white } from "../../../public/assets";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import ConfirmationDeleteModal from "@/components/modal/ConfirmationModal";
 import { NavItemProps } from "@/types/navigation";
 import Image from "next/image";
 import { LuListTodo } from "react-icons/lu";
 import { MdCatchingPokemon, MdFastfood } from "react-icons/md";
 import { useTopLoader } from "nextjs-toploader";
+import { UserDropdown } from "../tools/OptionDropdown";
+import { AiFillFileMarkdown } from "react-icons/ai";
 
 const NavItem: NavItemProps[] = [
 	{
@@ -57,7 +51,7 @@ const NavItem: NavItemProps[] = [
 		id: "5",
 		title: "Markdown Notes App",
 		link: "/activity/markdown-notes-app",
-		icon: <FaUsers size={20} />,
+		icon: <AiFillFileMarkdown size={20} />,
 	},
 ];
 
@@ -159,7 +153,7 @@ export default function Navigation({
 		<div className="flex flex-col md:flex-row min-h-screen">
 			<aside className="w-full md:w-[15vw] md:fixed z-20">
 				<div
-					className="relative h-[550px] md:h-screen text-white flex flex-col justify-between"
+					className="relative h-[500px] md:h-screen text-white flex flex-col justify-between"
 					style={{
 						backgroundImage: `url(${background.src})`,
 						backgroundSize: "cover",
@@ -194,19 +188,11 @@ export default function Navigation({
 							))}
 						</nav>
 					</div>
-					<div className="p-4 border-t-1 border-white/20 space-y-2 relative z-10">
-						<button
-							onClick={handleLogoutModal}
-							className="w-full hover:bg-white/20 py-2 px-4 rounded flex items-center justify-start gap-4 cursor-pointer"
-						>
-							<FaSignOutAlt className="text-xl" /> Logout
-						</button>
-						<button
-							onClick={handleDeleteModal}
-							className="w-full hover:bg-white/20 py-2 px-4 rounded flex items-center justify-start gap-4 cursor-pointer"
-						>
-							<FaTrashAlt className="text-xl" /> Delete Account
-						</button>
+					<div className="p-4 border-t border-white/20 relative z-10">
+						<UserDropdown
+							handleLogoutModal={handleLogoutModal}
+							handleDeleteModal={handleDeleteModal}
+						/>
 					</div>
 				</div>
 			</aside>
