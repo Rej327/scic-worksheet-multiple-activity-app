@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "@/context/SessionContext";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -13,25 +14,8 @@ import {
 import { LuListTodo } from "react-icons/lu";
 import { MdCatchingPokemon, MdFastfood } from "react-icons/md";
 
-interface DashboardProps {
-	supabase: SupabaseClient;
-}
-
-export default function Dashboard({ supabase }: DashboardProps) {
-	const [user, setUser] = useState<User | null>(null);
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			const { data, error } = await supabase.auth.getUser();
-			if (error) {
-				console.error("Error fetching user:", error.message);
-			} else {
-				setUser(data.user);
-			}
-		};
-
-		fetchUser();
-	}, [supabase]);
+export default function Dashboard() {
+	const { fullName, session } = useSession();
 
 	const secretPages = [
 		{
@@ -67,17 +51,22 @@ export default function Dashboard({ supabase }: DashboardProps) {
 	];
 
 	return (
-		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-			{secretPages.map((page) => (
-				<Link href={page.link} key={page.id}>
-					<div className="bg-white hover:bg-green-200 cursor-pointer rounded-2xl shadow-md p-6 flex flex-col items-center justify-evenly h-48 transition duration-300 ease-in-out">
-						<div className="text-green-700">{page.icon}</div>
-						<div className="text-lg font-semibold text-center text-green-900">
-							{page.title}
+		<div>
+			{session ? (
+				<p className="font-semibold text-xl">Hi {fullName}</p>
+			) : null}
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+				{secretPages.map((page) => (
+					<Link href={page.link} key={page.id}>
+						<div className="bg-white hover:bg-green-200 cursor-pointer rounded-2xl shadow-md p-6 flex flex-col items-center justify-evenly h-48 transition duration-300 ease-in-out">
+							<div className="text-green-700">{page.icon}</div>
+							<div className="text-lg font-semibold text-center text-green-900">
+								{page.title}
+							</div>
 						</div>
-					</div>
-				</Link>
-			))}
+					</Link>
+				))}
+			</div>
 		</div>
 	);
 }
