@@ -79,7 +79,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 		loader.done();
 		return Object.keys(newErrors).length === 0;
 	};
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!validate()) return;
@@ -150,7 +149,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 						id="title"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+						className="w-full px-3 py-2 border border-gray-300 rounded-md :outline-none focus:shadow-md hover:shadow-md duration-300 "
 						placeholder="Note title"
 					/>
 				</div>
