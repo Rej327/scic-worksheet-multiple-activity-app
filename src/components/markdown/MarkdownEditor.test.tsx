@@ -1,14 +1,8 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import MarkdownEditor from "./MarkdownEditor"; // Adjust path if needed
+import React from "react";
+import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import MarkdownEditor from "./MarkdownEditor";
 
-// Mock react-icons used in the component
-jest.mock("react-icons/fa", () => ({
-	FaDrawPolygon: () => <span>FaDrawPolygon</span>,
-	FaEye: () => <span>FaEye</span>,
-	FaEdit: () => <span>FaEdit</span>,
-}));
-
-// Properly mock MDXRemote and serialize
+// Properly mock serialize from next-mdx-remote/serialize
 jest.mock("next-mdx-remote/serialize", () => ({
 	serialize: jest.fn(() =>
 		Promise.resolve({
@@ -19,81 +13,101 @@ jest.mock("next-mdx-remote/serialize", () => ({
 	),
 }));
 
+// Properly mock MDXRemote from next-mdx-remote
 jest.mock("next-mdx-remote", () => ({
-	MDXRemote: () => <div>Serialized Markdown</div>,
+	MDXRemote: () => <div data-testid="preview-content">Serialized Markdown</div>,
 }));
 
-// Mock toast functions
+// Mock toast functions (success and error)
 jest.mock("react-hot-toast", () => ({
 	success: jest.fn(),
 	error: jest.fn(),
 }));
 
-describe("MarkdownEditor Component", () => {
-	it("renders and submits a valid note", async () => {
-		const mockSave = jest.fn();
-		const mockCancel = jest.fn();
+describe("MarkdownEditor", () => {
+	const mockOnSave = jest.fn();
+	const mockOnCancel = jest.fn();
 
-		render(
-			<MarkdownEditor
-				initialTitle="Test Title"
-				initialContent="This is **markdown** content."
-				onSave={mockSave}
-				onCancel={mockCancel}
-			/>
-		);
+	beforeEach(() => {
+		localStorage.clear();
+		jest.clearAllMocks(); // Reset all mocks including toast
+	});
+
+	it("renders title and content inputs", () => {
+		render(<MarkdownEditor onSave={mockOnSave} onCancel={mockOnCancel} />);
+		expect(screen.getByTestId("note-title")).toBeInTheDocument();
+		expect(screen.getByTestId("note-content")).toBeInTheDocument();
+	});
+
+	it("allows input in title and content", () => {
+		render(<MarkdownEditor onSave={mockOnSave} onCancel={mockOnCancel} />);
 
 		fireEvent.change(screen.getByTestId("note-title"), {
-			target: { value: "Updated Title" },
+			target: { value: "My Title" },
 		});
-
 		fireEvent.change(screen.getByTestId("note-content"), {
-			target: { value: "Updated **markdown** content" },
+			target: { value: "Some content in markdown" },
+		});
+
+		expect(screen.getByTestId("note-title")).toHaveValue("My Title");
+		expect(screen.getByTestId("note-content")).toHaveValue(
+			"Some content in markdown"
+		);
+	});
+
+	it("toggles between edit and preview modes", async () => {
+		render(<MarkdownEditor onSave={mockOnSave} onCancel={mockOnCancel} />);
+
+		const previewBtn = screen.getByText("Preview");
+		fireEvent.click(previewBtn);
+
+		// Preview should show serialized markdown
+		await waitFor(() => {
+			expect(screen.getByTestId("preview-content")).toBeInTheDocument();
+		});
+
+		const editBtn = screen.getByText("Edit");
+		fireEvent.click(editBtn);
+
+		await waitFor(() => {
+			expect(screen.getByTestId("note-content")).toBeInTheDocument();
+		});
+	});
+
+	it("validates inputs and shows error messages", async () => {
+		render(<MarkdownEditor onSave={mockOnSave} onCancel={mockOnCancel} />);
+
+		fireEvent.click(screen.getByTestId("save-button"));
+
+		await waitFor(() => {
+			expect(screen.getByText("* Title is required.")).toBeInTheDocument();
+			expect(screen.getByText("* Content is required.")).toBeInTheDocument();
+		});
+	});
+
+	it("calls onSave when form is valid", async () => {
+		render(<MarkdownEditor onSave={mockOnSave} onCancel={mockOnCancel} />);
+
+		fireEvent.change(screen.getByTestId("note-title"), {
+			target: { value: "Valid Title" },
+		});
+		fireEvent.change(screen.getByTestId("note-content"), {
+			target: { value: "This is valid markdown content" },
 		});
 
 		fireEvent.click(screen.getByTestId("save-button"));
 
-		await waitFor(() =>
-			expect(mockSave).toHaveBeenCalledWith(
-				"Updated Title",
-				"Updated **markdown** content"
-			)
-		);
+		await waitFor(() => {
+			expect(mockOnSave).toHaveBeenCalledWith(
+				"Valid Title",
+				"This is valid markdown content"
+			);
+		});
 	});
 
-	it("shows validation errors for empty inputs", async () => {
-		const mockSave = jest.fn();
-		const mockCancel = jest.fn();
-
-		render(<MarkdownEditor onSave={mockSave} onCancel={mockCancel} />);
-
-		fireEvent.click(screen.getByTestId("save-button"));
-
-		expect(await screen.findByText("* Title is required.")).toBeInTheDocument();
-		expect(await screen.findByText("* Content is required.")).toBeInTheDocument();
-	});
-
-	it("toggles between edit and preview mode", async () => {
-		const mockSave = jest.fn();
-		const mockCancel = jest.fn();
-
-		render(
-			<MarkdownEditor
-				initialTitle="Test"
-				initialContent="Hello world"
-				onSave={mockSave}
-				onCancel={mockCancel}
-			/>
-		);
-
-		fireEvent.click(screen.getByText("Preview"));
-
-		await waitFor(() =>
-			expect(screen.getByText("Serialized Markdown")).toBeInTheDocument()
-		);
-
-		fireEvent.click(screen.getByText("Edit"));
-
-		expect(screen.getByTestId("note-content")).toBeInTheDocument();
+	it("calls onCancel when cancel button is clicked", () => {
+		render(<MarkdownEditor onSave={mockOnSave} onCancel={mockOnCancel} />);
+		fireEvent.click(screen.getByTestId("cancel-button"));
+		expect(mockOnCancel).toHaveBeenCalled();
 	});
 });
