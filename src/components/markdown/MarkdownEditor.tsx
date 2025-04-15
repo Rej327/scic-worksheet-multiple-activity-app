@@ -7,6 +7,7 @@ import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import SpinnerLoading from "@/components/loader/SpinnerLoading";
 import { useTopLoader } from "nextjs-toploader";
+import { loadFromStorage, LOCAL_STORAGE_KEYS, saveToStorage } from "@/utils/inputsData";
 
 interface MarkdownEditorProps {
 	initialContent?: string;
@@ -22,8 +23,12 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 	onSave,
 	onCancel,
 }) => {
-	const [title, setTitle] = useState(initialTitle);
-	const [content, setContent] = useState(initialContent);
+	const [title, setTitle] = useState(() =>
+		loadFromStorage(LOCAL_STORAGE_KEYS.title, initialTitle)
+	);
+	const [content, setContent] = useState(() =>
+		loadFromStorage(LOCAL_STORAGE_KEYS.content, initialContent)
+	);
 	const [mode, setMode] = useState<"edit" | "preview">("edit");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
@@ -33,6 +38,16 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 	const [mdxContent, setMdxContent] =
 		useState<MDXRemoteSerializeResult | null>(null);
 	const loader = useTopLoader();
+
+	// Sync title to localStorage
+	useEffect(() => {
+		saveToStorage(LOCAL_STORAGE_KEYS.title, title);
+	}, [title]);
+
+	// Sync content to localStorage
+	useEffect(() => {
+		saveToStorage(LOCAL_STORAGE_KEYS.content, content);
+	}, [content]);
 
 	// Serialize Markdown to MDX for preview mode
 	useEffect(() => {
