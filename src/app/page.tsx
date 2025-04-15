@@ -95,14 +95,9 @@ export default function Home() {
 		);
 	}
 
-	const fullName = session?.user?.user_metadata?.full_name ?? "";
-
 	return session ? (
 		<Navigation>
 			<div className="px-4">
-				<h1 className="capitalize text-2xl font-bold mb-4 mt-6">
-					👋 Hello, {fullName}
-				</h1>
 				<Dashboard supabase={supabase} />
 			</div>
 		</Navigation>
