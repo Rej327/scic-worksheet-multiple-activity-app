@@ -1,7 +1,7 @@
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 
-const MarkdownHeader: React.FC<{
+const TodoHeader: React.FC<{
 	searchQuery: string;
 	setSearchQuery: (query: string) => void;
 	openCreateModal: () => void;
@@ -38,4 +38,4 @@ const MarkdownHeader: React.FC<{
 	);
 };
 
-export default MarkdownHeader;
+export default TodoHeader;
