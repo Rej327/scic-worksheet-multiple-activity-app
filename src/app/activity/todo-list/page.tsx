@@ -20,14 +20,21 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/helper/connection";
 import TodoModal from "@/components/todo/TodoModal";
-import { clearStorage } from "@/utils/inputsData";
+import {
+	clearStorage,
+	loadFromStorage,
+	LOCAL_STORAGE_KEYS,
+	saveToStorage,
+} from "@/utils/inputsData";
 
 export default function page() {
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 	const [modalType, setModalType] = useState<ModalType>("none");
-	const [searchQuery, setSearchQuery] = useState("");
+	const [searchQuery, setSearchQuery] = useState(
+		loadFromStorage(LOCAL_STORAGE_KEYS.searchQuery || "")
+	);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [isSetVisible, setIsSetVisible] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -109,6 +116,7 @@ export default function page() {
 		loader.setProgress(0.25);
 		const debounce = setTimeout(() => {
 			setDebounceQuery(searchQuery);
+			saveToStorage(LOCAL_STORAGE_KEYS.searchQuery, searchQuery);
 			loader.done();
 		}, 1500);
 

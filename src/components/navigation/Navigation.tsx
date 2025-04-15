@@ -15,6 +15,7 @@ import { MdCatchingPokemon, MdFastfood } from "react-icons/md";
 import { useTopLoader } from "nextjs-toploader";
 import { UserDropdown } from "../tools/OptionDropdown";
 import { AiFillFileMarkdown } from "react-icons/ai";
+import { resetStorage } from "@/utils/inputsData";
 
 const NavItem: NavItemProps[] = [
 	{
@@ -101,6 +102,7 @@ export default function Navigation({
 		loader.setProgress(0.25);
 		try {
 			await supabase.auth.signOut();
+			resetStorage();
 		} catch {
 			toast.error("Error on logout");
 		} finally {
@@ -145,6 +147,7 @@ export default function Navigation({
 			if (email) {
 				toast.success(`Successfully delete account: ${email}`);
 			}
+			resetStorage();
 			loader.done();
 		}
 	};
