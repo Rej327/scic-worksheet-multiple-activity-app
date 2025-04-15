@@ -135,7 +135,7 @@ export default function Auth({ supabase }: DashboardProps) {
 							<div>
 								<input
 									data-testid="fullname"
-									className="border border-gray-300 p-2 w-full rounded focus:outline-green-600"
+									className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 									type="text"
 									placeholder="Full Name"
 									value={fullname}
@@ -154,7 +154,7 @@ export default function Auth({ supabase }: DashboardProps) {
 						<div>
 							<input
 								data-testid="email"
-								className="border border-gray-300 p-2 w-full rounded focus:outline-green-600"
+								className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 								type="email"
 								placeholder="Email"
 								value={email}
@@ -170,7 +170,7 @@ export default function Auth({ supabase }: DashboardProps) {
 						<div>
 							<input
 								data-testid="password"
-								className="border border-gray-300 p-2 w-full rounded focus:outline-green-600"
+								className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 								type="password"
 								placeholder="Password"
 								value={password}

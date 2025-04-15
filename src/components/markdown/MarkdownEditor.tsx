@@ -135,7 +135,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 						id="title"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md"
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 						placeholder="Note title"
 					/>
 				</div>
@@ -160,7 +160,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 							id="content"
 							value={content}
 							onChange={(e) => setContent(e.target.value)}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md min-h-[300px] font-mono"
+							className="w-full px-3 py-2 border border-gray-300 rounded-md min-h-[300px] font-mono focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 							placeholder="Write your note in Markdown..."
 						/>
 					</div>
