@@ -13,12 +13,11 @@ import NoteDetail from "@/components/markdown/NoteDetail";
 import { ModalType, Note } from "@/types/notes";
 import { useState, useEffect, useRef } from "react";
 import { useTopLoader } from "nextjs-toploader";
-import ConfirmationDeleteModal from "@/components/ConfirmationModal";
-import SpinnerLoading from "@/components/SpinnerLoading";
+import ConfirmationDeleteModal from "@/components/modal/ConfirmationModal";
+import SpinnerLoading from "@/components/loader/SpinnerLoading";
 import MarkdownHeader from "@/view/markdown/MarkDownHeader";
 import MarkdownNotes from "@/view/markdown/MarkdownNotes";
 import toast from "react-hot-toast";
-import { supabase } from "@/helper/connection";
 
 export default function Markdown() {
 	const [notes, setNotes] = useState<Note[]>([]);
