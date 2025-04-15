@@ -21,7 +21,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/helper/connection";
 
-export default function Markdown() {
+export default function page() {
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [selectedNote, setSelectedNote] = useState<Note | null>(null);
@@ -105,8 +105,10 @@ export default function Markdown() {
 	}, [page]);
 
 	useEffect(() => {
+		loader.setProgress(0.25);
 		const debounce = setTimeout(() => {
 			setDebounceQuery(searchQuery);
+			loader.done();
 		}, 1500);
 
 		return () => clearTimeout(debounce);
@@ -236,7 +238,7 @@ export default function Markdown() {
 			{/* Notes */}
 			{loading ? (
 				<SpinnerLoading />
-			) : notes.length === 0 ? (
+			) : filteredNotes.length === 0 ? (
 				<div className="text-center py-8 text-gray-500">
 					{debounceQuery
 						? "No notes match your search"
@@ -244,7 +246,7 @@ export default function Markdown() {
 				</div>
 			) : (
 				<div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-					{notes.map((note, i) => (
+					{filteredNotes.map((note, i) => (
 						<div key={i} className="break-inside-avoid mb-4">
 							<MarkdownNotes
 								note={note}
