@@ -24,7 +24,7 @@ describe.only("MarkdownHeader", () => {
     );
 
     // Check if the title is rendered
-    expect(screen.getByText("Markdown Notes")).toBeInTheDocument();
+    expect(screen.getByText("**NoteMaster**")).toBeInTheDocument();
 
     // Check if the search input is rendered and has the correct value
     const searchInput = screen.getByPlaceholderText("🔍 Search notes...");
