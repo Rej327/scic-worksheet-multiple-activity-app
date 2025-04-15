@@ -10,7 +10,7 @@ const MarkdownHeader: React.FC<{
 		<div>
 			<div className="flex flex-col sm:flex-row justify-between items-center mb-8">
 				<h1 className="text-3xl font-bold mb-4 sm:mb-0 text-green-950">
-					Markdown Notes
+					TaskTrack
 				</h1>
 
 				{/* Icon Button */}

@@ -12,7 +12,7 @@ interface ModalProps {
 	isSetVisible?: boolean; // Changed to optional prop to match usage in Home component
 }
 
-export default function Modal({
+export default function TodoModal({
 	isOpen,
 	onClose,
 	title,

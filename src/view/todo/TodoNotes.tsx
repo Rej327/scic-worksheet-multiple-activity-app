@@ -3,9 +3,9 @@ import { CiClock1 } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import IconWithTooltip from "@/components/tools/IconWithTooltip";
-import { NoteCardProps } from "@/types/markdown";
+import { TodoCardProps } from "@/types/todos";
 
-const MarkdownNotes: React.FC<NoteCardProps> = ({
+const TodoNotes: React.FC<TodoCardProps> = ({
 	note,
 	onViewNote,
 	onEditNote,
@@ -64,4 +64,4 @@ const MarkdownNotes: React.FC<NoteCardProps> = ({
 	);
 };
 
-export default MarkdownNotes;
+export default TodoNotes;

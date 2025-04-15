@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import { FaEdit, FaEye } from "react-icons/fa";
-import { serialize } from "next-mdx-remote/serialize";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import SpinnerLoading from "@/components/loader/SpinnerLoading";
+import { FaEdit } from "react-icons/fa";
+
 import { useTopLoader } from "nextjs-toploader";
 
 interface MarkdownEditorProps {
@@ -16,7 +14,7 @@ interface MarkdownEditorProps {
 	isEditing?: boolean;
 }
 
-const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
+const TodoEditor: React.FC<MarkdownEditorProps> = ({
 	initialContent = "",
 	initialTitle = "",
 	onSave,
@@ -24,26 +22,13 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 }) => {
 	const [title, setTitle] = useState(initialTitle);
 	const [content, setContent] = useState(initialContent);
-	const [mode, setMode] = useState<"edit" | "preview">("edit");
+	const [mode, setMode] = useState<"edit" | "create">("edit");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [errors, setErrors] = useState<{ title?: string; content?: string }>(
 		{}
 	);
-	const [mdxContent, setMdxContent] =
-		useState<MDXRemoteSerializeResult | null>(null);
 	const loader = useTopLoader();
-
-	// Serialize Markdown to MDX for preview mode
-	useEffect(() => {
-		const convertMarkdownToMdx = async () => {
-			if (mode === "preview") {
-				const mdx = await serialize(content || "");
-				setMdxContent(mdx);
-			}
-		};
-		convertMarkdownToMdx();
-	}, [content, mode]);
 
 	const validate = () => {
 		const newErrors: typeof errors = {};
@@ -87,31 +72,12 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
 	return (
 		<div className="space-y-4">
-			<div className="flex justify-between items-center mb-4">
-				<div className="flex gap-2">
-					<button
-						type="button"
-						onClick={() => setMode("edit")}
-						className={`flex items-center gap-1 px-3 py-1 rounded-md transition-colors duration-300 cursor-pointer ${
-							mode === "edit"
-								? "bg-green-600 text-white"
-								: "bg-gray-200 hover:bg-gray-300"
-						}`}
-					>
-						<FaEdit size={15} /> Edit
-					</button>
-					<button
-						type="button"
-						onClick={() => setMode("preview")}
-						className={`flex items-center gap-1 px-3 py-1 rounded-md transition-colors duration-300 cursor-pointer ${
-							mode === "preview"
-								? "bg-green-600 text-white"
-								: "bg-gray-200 hover:bg-gray-300"
-						}`}
-					>
-						<FaEye size={15} /> Preview
-					</button>
-				</div>
+			<div
+				onClick={() => setMode("edit")}
+				className="flex items-center w-fit mb-4 gap-1 px-3 py-1 rounded-md transition-colors duration-300 bg-green-600 text-white"
+			>
+				<FaEdit size={15} />
+				<p>Edit</p>
 			</div>
 
 			<form onSubmit={handleSubmit} className="space-y-4">
@@ -135,7 +101,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 						id="title"
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
-						className="w-full px-3 py-2 border border-gray-300 rounded-md"
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 						placeholder="Note title"
 					/>
 				</div>
@@ -147,7 +113,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 								htmlFor="content"
 								className="block mb-1 font-medium text-green-950"
 							>
-								Content (Markdown)
+								Content
 							</label>
 							{errors.content && (
 								<p className="text-red-500 text-sm mt-1">
@@ -160,8 +126,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 							id="content"
 							value={content}
 							onChange={(e) => setContent(e.target.value)}
-							className="w-full px-3 py-2 border border-gray-300 rounded-md min-h-[300px] font-mono"
-							placeholder="Write your note in Markdown..."
+							className="w-full px-3 py-2 border border-gray-300 rounded-md min-h-[300px] focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+							placeholder="Write your note"
 						/>
 					</div>
 				) : (
@@ -173,11 +139,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 							<p className="text-red-500 text-sm mt-1 text-right">
 								{errors.content}
 							</p>
-						)}
-						{mdxContent ? (
-							<MDXRemote {...mdxContent} />
-						) : (
-							<SpinnerLoading />
 						)}
 					</div>
 				)}
@@ -235,4 +196,4 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 	);
 };
 
-export default MarkdownEditor;
+export default TodoEditor;
