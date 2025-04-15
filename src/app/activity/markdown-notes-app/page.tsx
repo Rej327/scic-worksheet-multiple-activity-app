@@ -20,6 +20,7 @@ import MarkdownNotes from "@/view/markdown/MarkdownNotes";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/helper/connection";
+import { clearStorage } from "@/utils/inputsData";
 
 export default function page() {
 	const [notes, setNotes] = useState<Note[]>([]);
@@ -212,6 +213,7 @@ export default function page() {
 
 	// Close any open modal with transition
 	const closeModal = () => {
+		clearStorage();
 		setModalType("none");
 	};
 
