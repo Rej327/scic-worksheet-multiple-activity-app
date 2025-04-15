@@ -67,12 +67,11 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		loader.start();
 		if (!validate()) return;
 
 		setIsSubmitting(true);
 		setIsEditing(true);
-		loader.setProgress(0.5);
+		loader.setProgress(0.25);
 		try {
 			await onSave(title, content);
 		} catch (error) {
@@ -193,7 +192,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 						Cancel
 					</button>
 					<button
-					data-testid="save-button"
+						data-testid="save-button"
 						type="submit"
 						className={`flex items-center gap-1 px-4 py-2 rounded-md transition-colors duration-300 ${
 							isEditing

@@ -1,4 +1,5 @@
 import { ConfirmationModalProps } from "@/types/modal";
+import { useTopLoader } from "nextjs-toploader";
 import React, { useEffect, useState } from "react";
 
 export default function ConfirmationDeleteModal({
@@ -10,6 +11,8 @@ export default function ConfirmationDeleteModal({
 }: ConfirmationModalProps) {
 	const [visible, setVisible] = useState(false);
 
+	const loader = useTopLoader();
+
 	useEffect(() => {
 		if (isOpen) setVisible(true);
 	}, [isOpen]);
@@ -17,6 +20,7 @@ export default function ConfirmationDeleteModal({
 	const handleClose = () => {
 		setVisible(false);
 		setTimeout(onClose, 300);
+		loader.done();
 	};
 
 	if (!isOpen) return null;

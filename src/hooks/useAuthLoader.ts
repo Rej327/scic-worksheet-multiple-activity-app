@@ -19,7 +19,7 @@ export function useAuthLoader() {
 
 			if (authError || !authData?.user) {
 				toast.error("No authenticated user found.");
-				loader.setProgress(0.5);
+				// loader.setProgress(0.25);
 				return;
 			}
 

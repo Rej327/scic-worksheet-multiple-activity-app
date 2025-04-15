@@ -53,7 +53,7 @@ export default function Auth({ supabase }: DashboardProps) {
 		e.preventDefault();
 		if (!validate()) return;
 		setLoading(true);
-		loader.start();
+		loader.setProgress(0.25);
 
 		if (isRegistering) {
 			const { error } = await supabase.auth.signUp({
@@ -88,8 +88,9 @@ export default function Auth({ supabase }: DashboardProps) {
 
 			toast.success("Login successful!");
 		}
-		setLoading(false);
+
 		loader.done();
+		setLoading(false);
 	};
 
 	return (
@@ -108,7 +109,7 @@ export default function Auth({ supabase }: DashboardProps) {
 						SCIC Worksheet
 					</h1>
 					<p className="text-white text-lg md:text-xl">
-						Secret Page App – Sign in or Create an Account
+						Multiple Activities App – Sign in or Create an Account
 					</p>
 				</div>
 			</div>
@@ -117,6 +118,7 @@ export default function Auth({ supabase }: DashboardProps) {
 				<div className="-mt-28 z-100 w-full max-w-md bg-white p-6 rounded-lg shadow-md">
 					<Image
 						src={scic_logo}
+						loading="lazy"
 						alt="Logo"
 						width={250}
 						height={150}
@@ -189,6 +191,11 @@ export default function Auth({ supabase }: DashboardProps) {
 								loading ? "opacity-60 cursor-not-allowed" : ""
 							}`}
 						>
+							{loading
+								? "Please wait "
+								: isRegistering
+								? "Register"
+								: "Login"}
 							{loading && (
 								<svg
 									className="animate-spin h-5 w-5 text-white"
@@ -211,11 +218,6 @@ export default function Auth({ supabase }: DashboardProps) {
 									></path>
 								</svg>
 							)}
-							{loading
-								? "Please wait..."
-								: isRegistering
-								? "Register"
-								: "Login"}
 						</button>
 					</form>
 

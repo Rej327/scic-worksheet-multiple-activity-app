@@ -104,7 +104,7 @@ export default function Navigation({
 	};
 
 	const handleLogout = async () => {
-		loader.start();
+		loader.setProgress(0.25);
 		try {
 			await supabase.auth.signOut();
 		} catch {
@@ -121,7 +121,7 @@ export default function Navigation({
 	};
 
 	const handleDelete = async () => {
-		loader.start();
+		loader.setProgress(0.25);
 		const { data: userData, error: userError } =
 			await supabase.auth.getUser();
 
@@ -171,6 +171,7 @@ export default function Navigation({
 						<div className="flex gap-2 px-4 pb-4 border-b-2 border-white/20">
 							<Image
 								src={scic_logo_white}
+								loading="lazy"
 								alt="Logo"
 								width={50}
 								height={50}

@@ -6,8 +6,6 @@ import { FaDrawPolygon, FaEye } from "react-icons/fa";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 
-
-
 export default function NoteDetail({ note, onEdit, onClose }: NoteDetailProps) {
 	const [mode, setMode] = useState<"preview" | "raw">("preview");
 	const [mdxContent, setMdxContent] = useState<MDXRemoteSerializeResult>();

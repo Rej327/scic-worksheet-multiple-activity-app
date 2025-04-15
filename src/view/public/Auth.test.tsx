@@ -60,7 +60,7 @@ describe.only("Auth", () => {
 
 		await waitFor(() => {
 			const buttonText = screen.getByTestId("submit-button");
-			expect(buttonText).toHaveTextContent("Please wait...");
+			expect(buttonText).toHaveTextContent("Please wait");
 		});
 	});
 });
