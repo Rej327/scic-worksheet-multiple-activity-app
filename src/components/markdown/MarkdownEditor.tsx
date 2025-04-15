@@ -7,7 +7,12 @@ import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import SpinnerLoading from "@/components/loader/SpinnerLoading";
 import { useTopLoader } from "nextjs-toploader";
-import { loadFromStorage, LOCAL_STORAGE_KEYS, saveToStorage } from "@/utils/inputsData";
+import {
+	clearStorage,
+	loadFromStorage,
+	LOCAL_STORAGE_KEYS,
+	saveToStorage,
+} from "@/utils/inputsData";
 
 interface MarkdownEditorProps {
 	initialContent?: string;
@@ -92,11 +97,23 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 			console.error("Error saving note:", error);
 			toast.error("Note failed to add!");
 		} finally {
+			setTitle("");
+			setContent("");
+			clearStorage();
 			setIsSubmitting(false);
 			setIsEditing(false);
 			loader.done();
 			toast.success("New note added!");
 		}
+	};
+
+	const handleCancel = () => {
+		loader.setProgress(0.25);
+		clearStorage();
+		onCancel();
+		setTitle("");
+		setContent("");
+		loader.done();
 	};
 
 	return (
@@ -200,7 +217,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 					<button
 						data-testid="cancel-button"
 						type="button"
-						onClick={onCancel}
+						onClick={handleCancel}
 						className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md cursor-pointer"
 					>
 						Cancel

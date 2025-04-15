@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
-
 import { useTopLoader } from "nextjs-toploader";
+import {
+	clearStorage,
+	loadFromStorage,
+	LOCAL_STORAGE_KEYS,
+	saveToStorage,
+} from "@/utils/inputsData";
 
 interface MarkdownEditorProps {
 	initialContent?: string;
@@ -20,8 +25,12 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 	onSave,
 	onCancel,
 }) => {
-	const [title, setTitle] = useState(initialTitle);
-	const [content, setContent] = useState(initialContent);
+	const [title, setTitle] = useState(() =>
+		loadFromStorage(LOCAL_STORAGE_KEYS.title, initialTitle)
+	);
+	const [content, setContent] = useState(() =>
+		loadFromStorage(LOCAL_STORAGE_KEYS.content, initialContent)
+	);
 	const [mode, setMode] = useState<"edit" | "create">("edit");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
@@ -29,6 +38,16 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 		{}
 	);
 	const loader = useTopLoader();
+
+	// Sync title to localStorage
+	useEffect(() => {
+		saveToStorage(LOCAL_STORAGE_KEYS.title, title);
+	}, [title]);
+
+	// Sync content to localStorage
+	useEffect(() => {
+		saveToStorage(LOCAL_STORAGE_KEYS.content, content);
+	}, [content]);
 
 	const validate = () => {
 		const newErrors: typeof errors = {};
@@ -63,6 +82,9 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 			console.error("Error saving note:", error);
 			toast.error("Note failed to add!");
 		} finally {
+			setTitle("");
+			setContent("");
+			clearStorage();
 			setIsSubmitting(false);
 			setIsEditing(false);
 			loader.done();
@@ -70,10 +92,19 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 		}
 	};
 
+	const handleCancel = () => {
+		loader.setProgress(0.25);
+		clearStorage();
+		onCancel();
+		setTitle("");
+		setContent("");
+		loader.done();
+	};
+
 	return (
 		<div className="space-y-4">
 			<div
-				onClick={() => setMode("edit")}
+				onClick={() => mode === "edit"}
 				className="flex items-center w-fit mb-4 gap-1 px-3 py-1 rounded-md transition-colors duration-300 bg-green-600 text-white"
 			>
 				<FaEdit size={15} />
@@ -147,7 +178,7 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 					<button
 						data-testid="cancel-button"
 						type="button"
-						onClick={onCancel}
+						onClick={handleCancel}
 						className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md cursor-pointer"
 					>
 						Cancel

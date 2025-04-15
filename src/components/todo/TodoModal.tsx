@@ -1,5 +1,6 @@
 "use client";
 
+import { clearStorage } from "@/utils/inputsData";
 import { ReactNode, useEffect, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 
@@ -47,6 +48,11 @@ export default function TodoModal({
 		};
 	}, [isOpen, isVisible]);
 
+	const handleClose = () => {
+		clearStorage();
+		onClose();
+	};
+
 	if (!isRendered) return null;
 
 	const sizeClasses = {
@@ -70,17 +76,10 @@ export default function TodoModal({
 				}`}
 				onClick={(e) => e.stopPropagation()}
 			>
-				<div className="flex justify-between items-center p-4 border-b border-gray-300 shadow">
+				<div className="p-4 border-b border-gray-300 shadow">
 					<h3 className="text-lg font-medium text-green-950">
 						{title}
 					</h3>
-					<button
-						onClick={onClose}
-						className="text-gray-400 hover:text-gray-500 transition-colors duration-300 cursor-pointer"
-						aria-label="Close"
-					>
-						<IoIosClose size={30} />
-					</button>
 				</div>
 				<div className="p-4 overflow-y-auto flex-grow">{children}</div>
 			</div>

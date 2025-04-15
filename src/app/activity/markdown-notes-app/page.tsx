@@ -249,7 +249,11 @@ export default function page() {
 			) : (
 				<div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
 					{filteredNotes.map((note, i) => (
-						<div key={i} className="break-inside-avoid mb-4">
+						<div
+							onClick={() => clearStorage()}
+							key={i}
+							className="break-inside-avoid mb-4"
+						>
 							<MarkdownNotes
 								note={note}
 								onViewNote={openViewModal}
