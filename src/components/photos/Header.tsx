@@ -8,7 +8,8 @@ import {
 } from "@/utils/inputsData";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUpload } from "react-icons/fa";
+import { FiUpload } from "react-icons/fi";
 
 const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 	const [search, setSearch] = useState("");
@@ -69,7 +70,7 @@ const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 					className="text-white flex gap-2 items-center bg-green-600 hover:bg-green-700 p-2 rounded-md transition-colors duration-300 cursor-pointer"
 					onClick={onAddPhoto}
 				>
-					<FaPlus size={15} /> New Note
+					<FiUpload size={15} /> Upload Photo
 				</button>
 			</div>
 			{currentCategory === "pokemon-review-app" && (
