@@ -10,13 +10,11 @@ import IsSubmitting from "../tools/IsSubmitting";
 import { useTopLoader } from "nextjs-toploader";
 import { PhotoDetailsModalProps, Review } from "@/types/photos";
 
-
-
 const PhotoDetailsModal = ({
 	isOpen,
 	onClose,
 	photo,
-} : PhotoDetailsModalProps) => {
+}: PhotoDetailsModalProps) => {
 	const [reviews, setReviews] = useState<Review[]>([]);
 	const [newReview, setNewReview] = useState("");
 	const [editingId, setEditingId] = useState<string | null>(null);
@@ -165,105 +163,91 @@ const PhotoDetailsModal = ({
 			</div>
 			{currentCategory === "google-drive-lite" ? null : (
 				<div>
-					{reviews.length === 0 ? null : (
-						<>
-							<h3 className="text-lg font-semibold mb-2">
-								Reviews
-							</h3>
-							<ul className="mb-4">
-								{reviews.map((review) => (
-									<li
-										key={review.id}
-										className="border-b border-y-green-950 pb-2 mb-2"
-									>
-										{editingId === review.id ? (
-											<div className="flex items-center">
-												<textarea
-													maxLength={5}
-													value={editingContent}
-													onChange={(e) =>
-														setEditingContent(
-															e.target.value
-														)
-													}
-													className="flex-grow h-[40px] border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+					<h3 className="text-lg font-semibold mb-2">Reviews</h3>
+					<ul className="mb-4">
+						{reviews.map((review) => (
+							<li
+								key={review.id}
+								className="border-b border-y-green-950 pb-2 mb-2"
+							>
+								{editingId === review.id ? (
+									<div className="flex items-center">
+										<textarea
+											maxLength={5}
+											value={editingContent}
+											onChange={(e) =>
+												setEditingContent(
+													e.target.value
+												)
+											}
+											className="flex-grow h-[40px] border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+										/>
+										<button
+											onClick={() =>
+												handleEditReview(review.id)
+											}
+											className="ml-2 px-2 py-1 bg-blue-500 text-white rounded-md"
+											disabled={isEditSaving}
+										>
+											{isEditSaving ? (
+												<IsSubmitting />
+											) : (
+												"Save"
+											)}
+										</button>
+									</div>
+								) : (
+									<div className="flex justify-between items-center">
+										<div className="max-w-[380px] w-full">
+											<p className="break-words whitespace-pre-wrap">
+												{review.content}
+											</p>
+										</div>
+										<div className="flex gap-2 items-center">
+											<button
+												onClick={() => {
+													setEditingId(review.id);
+													setEditingContent(
+														review.content
+													);
+												}}
+												className="text-black/50 hover:text-green-950 transition-colors duration-300 cursor-pointer"
+											>
+												<FaEdit size={20} />
+											</button>
+											<button
+												onClick={() =>
+													handleDeleteModal(review.id)
+												}
+												className="text-red-500"
+											>
+												<MdDelete
+													size={20}
+													className="text-black/50 hover:text-red-700 transition-colors duration-300 cursor-pointer"
 												/>
-												<button
-													onClick={() =>
-														handleEditReview(
-															review.id
-														)
-													}
-													className="ml-2 px-2 py-1 bg-blue-500 text-white rounded-md"
-													disabled={isEditSaving}
-												>
-													{isEditSaving ? (
-														<IsSubmitting />
-													) : (
-														"Save"
-													)}
-												</button>
-											</div>
-										) : (
-											<div className="flex justify-between items-center">
-												<div className="max-w-[380px] w-full">
-													<p className="break-words whitespace-pre-wrap">
-														{review.content}
-													</p>
-												</div>
-												<div className="flex gap-2 items-center">
-													<button
-														onClick={() => {
-															setEditingId(
-																review.id
-															);
-															setEditingContent(
-																review.content
-															);
-														}}
-														className="text-black/50 hover:text-green-950 transition-colors duration-300 cursor-pointer"
-													>
-														<FaEdit size={20} />
-													</button>
-													<button
-														onClick={() =>
-															handleDeleteModal(
-																review.id
-															)
-														}
-														className="text-red-500"
-													>
-														<MdDelete
-															size={20}
-															className="text-black/50 hover:text-red-700 transition-colors duration-300 cursor-pointer"
-														/>
-													</button>
-												</div>
-											</div>
-										)}
-									</li>
-								))}
-							</ul>
-							<div className="flex">
-								<textarea
-									value={newReview}
-									maxLength={5}
-									onChange={(e) =>
-										setNewReview(e.target.value)
-									}
-									placeholder="Add a review..."
-									className="flex-grow border h-[40px] border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
-								/>
-								<button
-									onClick={handleAddReview}
-									className="ml-2 px-4 py-2 bg-green-600 hover:bg-green-700 duration-300 text-white rounded-md cursor-pointer"
-									disabled={isSaving}
-								>
-									{isSaving ? <IsSubmitting /> : "Add"}
-								</button>
-							</div>
-						</>
-					)}
+											</button>
+										</div>
+									</div>
+								)}
+							</li>
+						))}
+					</ul>
+					<div className="flex">
+						<textarea
+							value={newReview}
+							maxLength={5}
+							onChange={(e) => setNewReview(e.target.value)}
+							placeholder="Add a review..."
+							className="flex-grow border h-[40px] border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+						/>
+						<button
+							onClick={handleAddReview}
+							className="ml-2 px-4 py-2 bg-green-600 hover:bg-green-700 duration-300 text-white rounded-md cursor-pointer"
+							disabled={isSaving}
+						>
+							{isSaving ? <IsSubmitting /> : "Add"}
+						</button>
+					</div>
 				</div>
 			)}
 

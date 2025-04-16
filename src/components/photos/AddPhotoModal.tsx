@@ -22,7 +22,7 @@ const AddPhotoModal = ({
 }: AddPhotoModalProps) => {
 	const pathname = usePathname(); // Get the current path
 	const loader = useTopLoader();
-	const currentCategory = pathname.split("/").pop() || ""; // Ensure it's a string
+	const currentCategory = (pathname || "").split("/").pop() || "";
 	const [file, setFile] = useState<File | null>(null);
 	const [loading, setLoading] = useState(false);
 
