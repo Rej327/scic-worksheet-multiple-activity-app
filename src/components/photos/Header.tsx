@@ -37,14 +37,18 @@ const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 	}, [currentCategory]); // Depend on currentCategory so it updates when the path changes
 
 	// Load initial value from localStorage
+	const searhName =
+		currentCategory === "pokemon-review-app"
+			? LOCAL_STORAGE_KEYS.searchPokemon
+			: LOCAL_STORAGE_KEYS.searchDrive;
 	useEffect(() => {
-		const stored = loadFromStorage(LOCAL_STORAGE_KEYS.searchPokemon, "");
+		const stored = loadFromStorage(searhName, "");
 		setSearch(stored);
 	}, []);
 
 	// Save to localStorage and debounce search
 	useEffect(() => {
-		saveToStorage(LOCAL_STORAGE_KEYS.searchPokemon, search);
+		saveToStorage(searhName, search);
 
 		const timeout = setTimeout(() => {
 			onSearch(search);
@@ -73,13 +77,13 @@ const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 					<FiUpload size={15} /> Upload Photo
 				</button>
 			</div>
-			{currentCategory === "pokemon-review-app" && (
+			{currentCategory === "food-review-app" ? null : (
 				<input
 					data-testid="search-input"
 					type="text"
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
-					placeholder="Search"
+					placeholder="🔍 Search photo..."
 					className="w-full px-4 py-2 border-b-2 border-green-800 focus:outline-none transition-all duration-300"
 				/>
 			)}

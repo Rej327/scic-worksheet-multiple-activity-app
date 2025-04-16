@@ -6,6 +6,7 @@ export const LOCAL_STORAGE_KEYS = {
 	pokemonTitle: "draftTitle",
 	searchQuery: "draftQuery",
 	searchPokemon: "draftPokemonQuery",
+	searchDrive: "draftSearchDrive",
 	addFood: "draftAddFood",
 	addPokemon: "draftAddPokemon",
 	addDrive: "draftAddDrive",
@@ -53,4 +54,5 @@ export const resetStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.addPokemon);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.todoTitle);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.todoContent);
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.searchDrive);
 };
