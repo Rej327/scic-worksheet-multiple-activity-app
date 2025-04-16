@@ -148,7 +148,7 @@ const PhotoDetailsModal = ({
 				/>
 				<h2 className="text-2xl font-bold mb-4">{photo.name}</h2>
 			</div>
-			{currentCategory === "google-drive-lite" ? null : (
+			{currentCategory === "google-A" ? null : (
 				<div>
 					<h3 className="text-lg font-semibold mb-2">Reviews</h3>
 					<ul className="mb-4">
