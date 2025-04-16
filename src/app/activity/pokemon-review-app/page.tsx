@@ -1,6 +1,7 @@
-"use client";
+"use client"
 
 import { supabase } from "@/helper/connection";
+import Home from "@/view/photopage/Home";
 import { useRouter } from "next/navigation";
 import { useTopLoader } from "nextjs-toploader";
 import React, { useEffect } from "react";
@@ -22,10 +23,5 @@ export default function page() {
 		checkUser();
 		loader.done();
 	}, [router]);
-
-	return (
-		<div>
-			<h1>Hello</h1>
-		</div>
-	);
+	return <Home />;
 }
