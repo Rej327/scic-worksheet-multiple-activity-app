@@ -1,6 +1,6 @@
 "use client";
 
-import { clearStorage } from "@/utils/inputsData";
+import { clearTodoStorage } from "@/utils/inputsData";
 import { ReactNode, useEffect, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 
@@ -49,7 +49,7 @@ export default function TodoModal({
 	}, [isOpen, isVisible]);
 
 	const handleClose = () => {
-		clearStorage();
+		clearTodoStorage();
 		onClose();
 	};
 

@@ -7,9 +7,7 @@ export interface Note {
 	user_id: string;
 }
 
-export interface ModalState {
-	type: "none" | "create" | "view" | "edit";
-}
+export type ModalType = "none" | "create" | "view" | "edit";
 
 export interface NoteDetailProps {
 	note: Note;

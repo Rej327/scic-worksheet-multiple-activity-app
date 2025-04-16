@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { FaEdit } from "react-icons/fa";
 import { useTopLoader } from "nextjs-toploader";
 import {
-	clearStorage,
+	clearTodoStorage,
 	loadFromStorage,
 	LOCAL_STORAGE_KEYS,
 	saveToStorage,
@@ -27,10 +27,10 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 	onCancel,
 }) => {
 	const [title, setTitle] = useState(() =>
-		loadFromStorage(LOCAL_STORAGE_KEYS.title, initialTitle)
+		loadFromStorage(LOCAL_STORAGE_KEYS.todoTitle, initialTitle)
 	);
 	const [content, setContent] = useState(() =>
-		loadFromStorage(LOCAL_STORAGE_KEYS.content, initialContent)
+		loadFromStorage(LOCAL_STORAGE_KEYS.todoContent, initialContent)
 	);
 	const [mode, setMode] = useState<"edit" | "create">("edit");
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,12 +42,12 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 
 	// Sync title to localStorage
 	useEffect(() => {
-		saveToStorage(LOCAL_STORAGE_KEYS.title, title);
+		saveToStorage(LOCAL_STORAGE_KEYS.todoTitle, title);
 	}, [title]);
 
 	// Sync content to localStorage
 	useEffect(() => {
-		saveToStorage(LOCAL_STORAGE_KEYS.content, content);
+		saveToStorage(LOCAL_STORAGE_KEYS.todoContent, content);
 	}, [content]);
 
 	const validate = () => {
@@ -85,7 +85,7 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 		} finally {
 			setTitle("");
 			setContent("");
-			clearStorage();
+			clearTodoStorage();
 			setIsSubmitting(false);
 			setIsEditing(false);
 			loader.done();
@@ -95,7 +95,7 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 
 	const handleCancel = () => {
 		loader.setProgress(0.25);
-		clearStorage();
+		clearTodoStorage();
 		onCancel();
 		setTitle("");
 		setContent("");
