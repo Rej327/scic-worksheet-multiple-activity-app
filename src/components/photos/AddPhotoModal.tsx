@@ -1,10 +1,18 @@
 "use client";
 
 import { supabase } from "@/helper/connection";
-import axios from "axios";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import IsSubmitting from "../tools/IsSubmitting";
+import { useTopLoader } from "nextjs-toploader";
+import {
+	clearAddFood,
+	clearAddPokemon,
+	loadFromStorage,
+	LOCAL_STORAGE_KEYS,
+	saveToStorage,
+} from "@/utils/inputsData";
 
 type AddPhotoModalProps = {
 	isOpen: boolean;
@@ -17,12 +25,45 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 	onClose,
 	onPhotoAdded,
 }) => {
-	const [name, setName] = useState("");
+	const pathname = usePathname(); // Get the current path
+	const loader = useTopLoader();
+	const currentCategory = pathname.split("/").pop() || ""; // Ensure it's a string
 	const [file, setFile] = useState<File | null>(null);
 	const [loading, setLoading] = useState(false);
-	const pathname = usePathname(); // Get the current path
 
-	const currentCategory = pathname.split("/").pop();
+	// Initialize `savedName` and `name` with data from localStorage
+	const initialName = (() => {
+		switch (currentCategory) {
+			case "pokemon-review-app":
+				return loadFromStorage(LOCAL_STORAGE_KEYS.addPokemon) || "";
+			case "food-review-app":
+				return loadFromStorage(LOCAL_STORAGE_KEYS.addFood) || "";
+			case "google-drive-lite":
+				return loadFromStorage(LOCAL_STORAGE_KEYS.addDrive) || "";
+			default:
+				return "";
+		}
+	})();
+	const [name, setName] = useState(initialName);
+
+	// Save the name to localStorage when it changes
+	const handleNameChange = (value: string) => {
+		setName(value);
+
+		switch (currentCategory) {
+			case "pokemon-review-app":
+				saveToStorage(LOCAL_STORAGE_KEYS.addPokemon, value);
+				break;
+			case "food-review-app":
+				saveToStorage(LOCAL_STORAGE_KEYS.addFood, value);
+				break;
+			case "google-drive-lite":
+				saveToStorage(LOCAL_STORAGE_KEYS.addDrive, value);
+				break;
+			default:
+				break;
+		}
+	};
 
 	const handleUpload = async () => {
 		if (!name.trim() || !file) {
@@ -30,6 +71,7 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 			return;
 		}
 
+		loader.setProgress(0.25);
 		setLoading(true);
 
 		try {
@@ -88,6 +130,16 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 			toast.error("Something went wrong. Please try again.");
 		} finally {
 			setLoading(false);
+			loader.done();
+		}
+	};
+
+	const handleClose = () => {
+		onClose();
+		if (currentCategory === "pokemon-review-app") {
+			clearAddPokemon();
+		} else if (currentCategory === "food-review-app") {
+			clearAddFood();
 		}
 	};
 
@@ -96,13 +148,13 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 	return (
 		<div
 			className="fixed inset-0 z-50 flex justify-center items-center bg-black/80 transition-opacity duration-300"
-			onClick={onClose}
+			onClick={handleClose}
 		>
 			<div
 				className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full transition-transform transform duration-300 scale-95"
 				onClick={(e) => e.stopPropagation()}
 			>
-				<h2 className="text-xl font-bold mb-4">Upload Pokémon Photo</h2>
+				<h2 className="text-xl font-bold mb-4">Upload Photo</h2>
 				<div className="mb-4">
 					<label className="block text-sm font-medium mb-1">
 						Photo Name
@@ -110,7 +162,7 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 					<input
 						type="text"
 						value={name}
-						onChange={(e) => setName(e.target.value)}
+						onChange={(e) => handleNameChange(e.target.value)}
 						className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 						placeholder="Enter photo name"
 						disabled={loading}
@@ -124,24 +176,30 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 						type="file"
 						accept="image/*"
 						onChange={(e) => setFile(e.target.files?.[0] || null)}
-						className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+						className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:shadow-md hover:shadow-md duration-300 cursor-pointer"
 						disabled={loading}
 					/>
 				</div>
 				<div className="flex justify-end space-x-2">
 					<button
-						onClick={onClose}
-						className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-						disabled={loading}
+						type="button"
+						onClick={handleClose}
+						className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md cursor-pointer"
 					>
 						Cancel
 					</button>
 					<button
+						type="submit"
 						onClick={handleUpload}
-						className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
 						disabled={loading}
+						className={`flex items-center gap-1 px-4 py-2 rounded-md transition-colors duration-300 ${
+							loading
+								? "bg-blue-300 cursor-not-allowed"
+								: "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+						} text-white`}
 					>
-						{loading ? "Uploading..." : "Upload Photo"}
+						{loading ? "Uploading" : "Upload Photo"}
+						{loading && <IsSubmitting />}
 					</button>
 				</div>
 			</div>

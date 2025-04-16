@@ -8,7 +8,6 @@ export default function TodoDetail({ note, onEdit, onClose }: NoteDetailProps) {
 			<p className="border border-gray-300 shadow-md rounded-md p-4 bg-green-50 text-sm  focus:outline-none focus:shadow-md hover:shadow-md duration-300">
 				{note.content}
 			</p>
-
 			<div className="mb-2 text-sm text-gray-500">
 				<p>
 					Created: {new Date(note.created_at).toLocaleString()} |

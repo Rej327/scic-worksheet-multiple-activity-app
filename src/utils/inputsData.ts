@@ -4,6 +4,9 @@ export const LOCAL_STORAGE_KEYS = {
 	pokemonTitle: "draftTitle",
 	searchQuery: "draftQuery",
 	searchPokemon: "draftPokemonQuery",
+	addFood: "draftAddFood",
+	addPokemon: "draftAddPokemon",
+	addDrive: "draftAddDrive",
 };
 
 export const loadFromStorage = (key: string, fallback: string = "") => {
@@ -22,8 +25,11 @@ export const clearStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.content);
 };
 
-export const clearPokemonQuery = () => {
-	localStorage.removeItem(LOCAL_STORAGE_KEYS.searchPokemon);
+export const clearAddPokemon = () => {
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.addPokemon);
+};
+export const clearAddFood = () => {
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.addFood);
 };
 
 export const clearSearch = () => {
@@ -35,4 +41,6 @@ export const resetStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.content);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.searchQuery);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.searchPokemon);
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.addFood);
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.addPokemon);
 };
