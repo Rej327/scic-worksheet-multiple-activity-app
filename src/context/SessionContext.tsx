@@ -12,12 +12,14 @@ import { getUserById, saveNewUser } from "@/api/user/profile";
 
 interface SessionContextType {
 	session: any;
+	userId: string | null; // Add userId here
 	fullName: string;
 	loading: boolean;
 }
 
 const SessionContext = createContext<SessionContextType>({
 	session: null,
+	userId: null, // Default value for userId
 	fullName: "",
 	loading: true,
 });
@@ -28,6 +30,7 @@ export const SessionProvider = ({
 	children: React.ReactNode;
 }) => {
 	const [session, setSession] = useState<any>(null);
+	const [userId, setUserId] = useState<string | null>(null); // Add state for userId
 	const [fullName, setFullName] = useState("");
 	const [loading, setLoading] = useState(true);
 
@@ -35,7 +38,8 @@ export const SessionProvider = ({
 		const userId = user.id;
 		const userFullName = user.user_metadata?.full_name ?? "";
 
-		setFullName(userFullName); // save to context
+		setFullName(userFullName); // Save to context
+		setUserId(userId); // Save userId to context
 
 		const { data, error } = await getUserById(userId);
 
@@ -88,7 +92,7 @@ export const SessionProvider = ({
 	}, [saveProfile]);
 
 	return (
-		<SessionContext.Provider value={{ session, fullName, loading }}>
+		<SessionContext.Provider value={{ session, userId, fullName, loading }}>
 			{children}
 		</SessionContext.Provider>
 	);
