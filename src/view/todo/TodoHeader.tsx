@@ -25,7 +25,7 @@ const TodoHeader: React.FC<{
 			</div>
 
 			{/* Search Bar */}
-			<div className="mb-6">
+			{/* <div className="mb-6">
 				<input
 					type="text"
 					placeholder="🔍 Search notes..."
@@ -33,7 +33,7 @@ const TodoHeader: React.FC<{
 					onChange={(e) => setSearchQuery(e.target.value)}
 					className="w-full px-4 py-2 border-b-2 border-green-800 focus:outline-none transition-all duration-300"
 				/>
-			</div>
+			</div> */}
 		</div>
 	);
 };
