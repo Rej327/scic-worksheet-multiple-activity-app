@@ -1,16 +1,9 @@
 "use client";
 
+import { SortingControlsProps } from "@/types/photos";
 import React from "react";
 
-type SortingControlsProps = {
-	sortBy: "name" | "upload_date";
-	setSortBy: (value: "name" | "upload_date") => void;
-};
-
-const SortingControlls: React.FC<SortingControlsProps> = ({
-	sortBy,
-	setSortBy,
-}) => {
+const SortingControlls = ({ sortBy, setSortBy }: SortingControlsProps) => {
 	return (
 		<div className="flex justify-start space-x-4 p-4 bg-none">
 			<button

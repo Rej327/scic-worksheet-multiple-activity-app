@@ -1,5 +1,6 @@
 "use client";
 
+import { HeaderProps } from "@/types/photos";
 import {
 	loadFromStorage,
 	LOCAL_STORAGE_KEYS,
@@ -9,12 +10,8 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-type HeaderProps = {
-	onSearch: (searchTerm: string) => void;
-	onAddPhoto: () => void;
-};
 
-const Header: React.FC<HeaderProps> = ({ onSearch, onAddPhoto }) => {
+const Header = ({ onSearch, onAddPhoto } : HeaderProps) => {
 	const [search, setSearch] = useState("");
 	const [title, setTitle] = useState<string>("");
 

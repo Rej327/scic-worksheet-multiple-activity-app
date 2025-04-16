@@ -1,13 +1,8 @@
+import { ModalProps } from "@/types/photos";
 import React, { useEffect, useState } from "react";
 import { IoIosClose } from "react-icons/io";
 
-type ModalProps = {
-	isOpen: boolean;
-	onClose: () => void;
-	children: React.ReactNode;
-};
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 	const [visible, setVisible] = useState(false);
 
 	useEffect(() => {

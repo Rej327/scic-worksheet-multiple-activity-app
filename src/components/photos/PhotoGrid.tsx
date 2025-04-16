@@ -13,30 +13,17 @@ import { useSession } from "@/context/SessionContext";
 import { useTopLoader } from "nextjs-toploader";
 import SpinnerLoading from "../loader/SpinnerLoading";
 import IsSubmitting from "../tools/IsSubmitting";
+import { PhotoGridProps, PhotoProps } from "@/types/photos";
 
-type Photo = {
-	id: string;
-	name: string;
-	image_url: string;
-	upload_date: string;
-};
-
-type PhotoGridProps = {
-	sortBy: "name" | "upload_date";
-	refreshFlag: boolean;
-	search: string;
-	onPhotoClick: (photo: Photo) => void;
-};
-
-const PhotoGrid: React.FC<PhotoGridProps> = ({
+const PhotoGrid = ({
 	sortBy,
 	refreshFlag,
 	search,
 	onPhotoClick,
-}) => {
-	const [photos, setPhotos] = useState<Photo[]>([]);
+}: PhotoGridProps) => {
+	const [photos, setPhotos] = useState<PhotoProps[]>([]);
 	const [loading, setLoading] = useState(true);
-	const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null);
+	const [editingPhoto, setEditingPhoto] = useState<PhotoProps | null>(null);
 	const [newImageFile, setNewImageFile] = useState<File | null>(null);
 	const [confirmationModal, setConfirmationModal] = useState<boolean>(false);
 	const [deleteId, setDeleteId] = useState<string | null>(null);

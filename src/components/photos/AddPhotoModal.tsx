@@ -13,18 +13,13 @@ import {
 	LOCAL_STORAGE_KEYS,
 	saveToStorage,
 } from "@/utils/inputsData";
+import { AddPhotoModalProps } from "@/types/photos";
 
-type AddPhotoModalProps = {
-	isOpen: boolean;
-	onClose: () => void;
-	onPhotoAdded: () => void; // Callback to refresh the photo grid
-};
-
-const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
+const AddPhotoModal = ({
 	isOpen,
 	onClose,
 	onPhotoAdded,
-}) => {
+}: AddPhotoModalProps) => {
 	const pathname = usePathname(); // Get the current path
 	const loader = useTopLoader();
 	const currentCategory = pathname.split("/").pop() || ""; // Ensure it's a string

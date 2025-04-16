@@ -8,33 +8,15 @@ import { MdDelete } from "react-icons/md";
 import ConfirmationDeleteModal from "../modal/ConfirmationModal";
 import IsSubmitting from "../tools/IsSubmitting";
 import { useTopLoader } from "nextjs-toploader";
+import { PhotoDetailsModalProps, Review } from "@/types/photos";
 
-type Photo = {
-	image_url: string | undefined;
-	id: string;
-	name: string;
-	url: string;
-	user_id: string; // User ID associated with the photo
-};
 
-type Review = {
-	id: string;
-	content: string;
-	created_at: string;
-	user_id: string; // User ID of the review author
-};
 
-type PhotoDetailsModalProps = {
-	isOpen: boolean;
-	onClose: () => void;
-	photo: Photo | null;
-};
-
-const PhotoDetailsModal: React.FC<PhotoDetailsModalProps> = ({
+const PhotoDetailsModal = ({
 	isOpen,
 	onClose,
 	photo,
-}) => {
+} : PhotoDetailsModalProps) => {
 	const [reviews, setReviews] = useState<Review[]>([]);
 	const [newReview, setNewReview] = useState("");
 	const [editingId, setEditingId] = useState<string | null>(null);
