@@ -4,7 +4,7 @@ import AddPhotoModal from "@/components/photos/AddPhotoModal";
 import Header from "@/components/photos/Header";
 import PhotoDetailsModal from "@/components/photos/PhotoDetailsModal";
 import PhotoGrid from "@/components/photos/PhotoGrid";
-import SortingControls from "@/components/photos/SortingContols";
+import SortingControlls from "@/components/photos/SortingContolls";
 import React, { useState } from "react";
 
 export default function Home() {
@@ -38,7 +38,7 @@ export default function Home() {
 			/>
 
 			{/* Sorting Controls */}
-			<SortingControls sortBy={sortBy} setSortBy={setSortBy} />
+			<SortingControlls sortBy={sortBy} setSortBy={setSortBy} />
 
 			{/* Photo Grid Section */}
 			<PhotoGrid
