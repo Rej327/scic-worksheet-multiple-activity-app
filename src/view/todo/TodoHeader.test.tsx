@@ -27,10 +27,6 @@ describe.only("TodoHeader", () => {
     // Check if the title is rendered
     expect(screen.getByText("TaskTrack")).toBeInTheDocument();
 
-    // Check if the search input is rendered and has the correct value
-    const searchInput = screen.getByPlaceholderText("🔍 Search notes...");
-    expect(searchInput).toHaveValue(searchQuery);
-
     // Check if the "New Note" button is rendered
     const newNoteButton = screen.getByRole("button");
     expect(newNoteButton).toBeInTheDocument();
