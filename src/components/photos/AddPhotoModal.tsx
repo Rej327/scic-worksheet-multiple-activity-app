@@ -94,8 +94,14 @@ const AddPhotoModal: React.FC<AddPhotoModalProps> = ({
 	if (!isOpen) return null;
 
 	return (
-		<div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50">
-			<div className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
+		<div
+			className="fixed inset-0 z-50 flex justify-center items-center bg-black/80 transition-opacity duration-300"
+			onClick={onClose}
+		>
+			<div
+				className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full transition-transform transform duration-300 scale-95"
+				onClick={(e) => e.stopPropagation()}
+			>
 				<h2 className="text-xl font-bold mb-4">Upload Pokémon Photo</h2>
 				<div className="mb-4">
 					<label className="block text-sm font-medium mb-1">

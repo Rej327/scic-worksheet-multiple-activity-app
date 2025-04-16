@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { IoIosClose } from "react-icons/io";
 
 type ModalProps = {
 	isOpen: boolean;
@@ -27,14 +28,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 		>
 			<div
 				className="bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full transition-transform transform duration-300 scale-95"
-				onClick={(e) => e.stopPropagation()} // Prevent closing the modal when clicking inside
+				onClick={(e) => e.stopPropagation()}
 			>
 				{children}
 				<button
 					onClick={onClose}
-					className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+					className="absolute top-0 right-0 text-gray-500 hover:text-gray-700 cursor-pointer"
 				>
-					&times;
+					<IoIosClose size={30} />
 				</button>
 			</div>
 		</div>
