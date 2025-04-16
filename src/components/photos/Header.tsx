@@ -10,13 +10,12 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
-
-const Header = ({ onSearch, onAddPhoto } : HeaderProps) => {
+const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 	const [search, setSearch] = useState("");
 	const [title, setTitle] = useState<string>("");
 
 	const pathname = usePathname(); // Get the current path
-	const currentCategory = pathname.split("/").pop();
+	const currentCategory = pathname ? pathname.split("/").pop() : ""; // Ensure pathname is valid
 
 	useEffect(() => {
 		// Switch to update the title based on the current category
@@ -55,11 +54,18 @@ const Header = ({ onSearch, onAddPhoto } : HeaderProps) => {
 
 	return (
 		<header className="flex flex-col items-center bg-none">
-			<div className="flex justify-between items-center w-full mb-8">
-				<h1 className="text-3xl font-bold mb-4 sm:mb-0 text-green-950">
+			<div
+				data-testid="header-container"
+				className="flex justify-between items-center w-full mb-8"
+			>
+				<h1
+					data-testid="header-title"
+					className="text-3xl font-bold mb-4 sm:mb-0 text-green-950"
+				>
 					{title}
 				</h1>
 				<button
+					data-testid="add-photo-button"
 					className="text-white flex gap-2 items-center bg-green-600 hover:bg-green-700 p-2 rounded-md transition-colors duration-300 cursor-pointer"
 					onClick={onAddPhoto}
 				>
@@ -68,10 +74,11 @@ const Header = ({ onSearch, onAddPhoto } : HeaderProps) => {
 			</div>
 			{currentCategory === "pokemon-review-app" && (
 				<input
+					data-testid="search-input"
 					type="text"
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
-					placeholder="🔍 Search Pokémon"
+					placeholder="Search"
 					className="w-full px-4 py-2 border-b-2 border-green-800 focus:outline-none transition-all duration-300"
 				/>
 			)}

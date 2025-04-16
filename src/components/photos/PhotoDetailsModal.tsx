@@ -27,7 +27,7 @@ const PhotoDetailsModal = ({
 	const [deleteReviewId, setDeleteReviewId] = useState<string | null>(null);
 
 	const pathname = usePathname(); // Get the current path
-	const currentCategory = pathname.split("/").pop();
+	const currentCategory = pathname ? pathname.split("/").pop() : null;
 	const loader = useTopLoader();
 
 	// Fetch reviews for the selected photo
@@ -96,19 +96,6 @@ const PhotoDetailsModal = ({
 		fetchReviews();
 	};
 
-	// Delete a review
-	const handleDeleteReview = async (id: string) => {
-		const { error } = await supabase.from("reviews").delete().eq("id", id);
-
-		if (error) {
-			toast.error("Error deleting review");
-			return;
-		}
-
-		toast.success("Review deleted");
-		fetchReviews();
-	};
-
 	useEffect(() => {
 		if (isOpen) {
 			fetchReviews();
@@ -153,7 +140,7 @@ const PhotoDetailsModal = ({
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
-			<div className="text-center">
+			<div data-testid="photo-modal" className="text-center">
 				<img
 					src={photo.image_url}
 					alt={photo.name}
@@ -173,8 +160,8 @@ const PhotoDetailsModal = ({
 								{editingId === review.id ? (
 									<div className="flex items-center">
 										<textarea
-											maxLength={5}
-											value={editingContent}
+											maxLength={300}
+											value={editingContent} // Bind to editingContent state
 											onChange={(e) =>
 												setEditingContent(
 													e.target.value
@@ -186,7 +173,7 @@ const PhotoDetailsModal = ({
 											onClick={() =>
 												handleEditReview(review.id)
 											}
-											className="ml-2 px-2 py-1 bg-blue-500 text-white rounded-md"
+											className="ml-2 px-2 py-1 bg-blue-500 text-white rounded-md cursor-pointer"
 											disabled={isEditSaving}
 										>
 											{isEditSaving ? (
@@ -208,7 +195,7 @@ const PhotoDetailsModal = ({
 												onClick={() => {
 													setEditingId(review.id);
 													setEditingContent(
-														review.content
+														review.content // Initialize editingContent with the current review content
 													);
 												}}
 												className="text-black/50 hover:text-green-950 transition-colors duration-300 cursor-pointer"
@@ -235,7 +222,7 @@ const PhotoDetailsModal = ({
 					<div className="flex">
 						<textarea
 							value={newReview}
-							maxLength={5}
+							maxLength={300}
 							onChange={(e) => setNewReview(e.target.value)}
 							placeholder="Add a review..."
 							className="flex-grow border h-[40px] border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
