@@ -22,7 +22,7 @@ const PhotoGrid = ({
 	onPhotoClick,
 }: PhotoGridProps) => {
 	const [photos, setPhotos] = useState<PhotoProps[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [editingPhoto, setEditingPhoto] = useState<PhotoProps | null>(null);
 	const [newImageFile, setNewImageFile] = useState<File | null>(null);
 	const [confirmationModal, setConfirmationModal] = useState<boolean>(false);
