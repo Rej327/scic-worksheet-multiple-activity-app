@@ -8,6 +8,7 @@ import {
 	useState,
 } from "react";
 import { supabase } from "@/helper/connection";
+import Loading from "@/helper/Loading";
 import { getUserById, saveNewUser } from "@/api/user/profile";
 
 interface SessionContextType {
@@ -67,16 +68,26 @@ export const SessionProvider = ({
 			}
 		} catch (err) {
 			console.error("Error in saveProfile:", err);
+		} finally {
+			setLoading(false);
 		}
 	}, []);
 
 	useEffect(() => {
-		setLoading(true);
 		const initializeSession = async () => {
 			try {
 				// Fetch the current session
 				const { data } = await supabase.auth.getSession();
 				const currentSession = data.session;
+
+				if (!currentSession) {
+					// Redirect to login only if not already on the login page
+					if (window.location.pathname !== "/") {
+						window.location.href = "/";
+					}
+					setLoading(false); // Prevent infinite loading when session is null
+					return;
+				}
 
 				setSession(currentSession);
 				if (currentSession?.user) {
@@ -84,6 +95,9 @@ export const SessionProvider = ({
 				}
 			} catch (err) {
 				console.error("Error fetching session:", err);
+			} finally {
+				// Stop the loading state regardless of session existence
+				setLoading(false);
 			}
 		};
 
@@ -93,6 +107,15 @@ export const SessionProvider = ({
 		const { data: listener } = supabase.auth.onAuthStateChange(
 			async (_event, session) => {
 				setSession(session);
+
+				// Redirect to login on logout or token refresh failure
+				if (!_event || _event === "SIGNED_OUT") {
+					if (window.location.pathname !== "/") {
+						window.location.href = "/";
+					}
+					return;
+				}
+
 				if (session?.user) {
 					await saveProfile(session.user);
 				}
@@ -100,13 +123,17 @@ export const SessionProvider = ({
 		);
 
 		// Cleanup listener on unmount
-		setLoading(false);
 		return () => listener.subscription.unsubscribe();
 	}, [saveProfile]);
 
 	return (
 		<SessionContext.Provider value={{ session, userId, fullName, loading }}>
-			{children}
+			{!loading && children}
+			{loading && (
+				<div className="w-screen h-screen">
+					<Loading />
+				</div>
+			)}
 		</SessionContext.Provider>
 	);
 };
