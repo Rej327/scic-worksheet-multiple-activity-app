@@ -32,7 +32,7 @@ export const SessionProvider = ({
 	const [session, setSession] = useState<any>(null);
 	const [userId, setUserId] = useState<string | null>(null);
 	const [fullName, setFullName] = useState("");
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 
 	const saveProfile = useCallback(async (user: any) => {
 		const userId = user.id;
@@ -71,6 +71,7 @@ export const SessionProvider = ({
 	}, []);
 
 	useEffect(() => {
+		setLoading(true);
 		const initializeSession = async () => {
 			try {
 				// Fetch the current session
@@ -83,9 +84,6 @@ export const SessionProvider = ({
 				}
 			} catch (err) {
 				console.error("Error fetching session:", err);
-			} finally {
-				// Stop the loading state regardless of session existence
-				setLoading(false);
 			}
 		};
 
@@ -102,6 +100,7 @@ export const SessionProvider = ({
 		);
 
 		// Cleanup listener on unmount
+		setLoading(false);
 		return () => listener.subscription.unsubscribe();
 	}, [saveProfile]);
 
