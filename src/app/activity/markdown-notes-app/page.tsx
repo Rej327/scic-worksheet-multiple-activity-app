@@ -29,7 +29,7 @@ import {
 
 export default function page() {
 	const [notes, setNotes] = useState<Note[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 	const [modalType, setModalType] = useState<ModalType>("none");
 	const [searchQuery, setSearchQuery] = useState(
@@ -48,7 +48,6 @@ export default function page() {
 	const router = useRouter();
 
 	useEffect(() => {
-		loader.setProgress(0.25);
 		const checkUser = async () => {
 			const { data, error } = await supabase.auth.getUser();
 
@@ -58,7 +57,6 @@ export default function page() {
 		};
 
 		checkUser();
-		loader.done();
 	}, [router]);
 
 	const fetchNotes = async (page: number) => {

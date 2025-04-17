@@ -29,7 +29,7 @@ import {
 
 export default function page() {
 	const [notes, setNotes] = useState<Note[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 	const [modalType, setModalType] = useState<ModalType>("none");
 	const [searchQuery, setSearchQuery] = useState(
