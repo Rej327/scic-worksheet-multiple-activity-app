@@ -35,6 +35,20 @@ export const SessionProvider = ({
 	const [fullName, setFullName] = useState("");
 	const [loading, setLoading] = useState(false);
 
+	useEffect(() => {
+		const handleVisibilityChange = () => {
+			if (document.visibilityState === "visible") {
+				location.reload();
+			}
+		};
+		document.addEventListener("visibilitychange", handleVisibilityChange);
+		return () =>
+			document.removeEventListener(
+				"visibilitychange",
+				handleVisibilityChange
+			);
+	}, []);
+
 	const saveProfile = useCallback(async (user: any) => {
 		const userId = user.id;
 		const userFullName = user.user_metadata?.full_name ?? "";

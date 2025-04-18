@@ -247,11 +247,15 @@ export default function page() {
 			{loading ? (
 				<SpinnerLoading />
 			) : filteredNotes.length === 0 ? (
-				<div className="text-center py-8 text-gray-500">
-					{debounceQuery
-						? "No notes match your search"
-						: "No notes yet. Create your first note!"}
-				</div>
+				!loading ? (
+					<SpinnerLoading />
+				) : (
+					<div className="text-center py-8 text-gray-500">
+						{debounceQuery
+							? "No notes match your search"
+							: "No notes yet. Create your first note!"}
+					</div>
+				)
 			) : (
 				<div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
 					{filteredNotes.map((note, i) => (

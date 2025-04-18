@@ -39,6 +39,7 @@ const PhotoGrid = ({
 
 	// Fetch photos for the current user and category
 	const fetchPhotos = async () => {
+		setLoading(true);
 		if (!userId) return; // Ensure the user ID is available
 		loader.setProgress(0.25); // Start loader progress
 
@@ -202,80 +203,74 @@ const PhotoGrid = ({
 		<div>
 			{loading ? (
 				<SpinnerLoading />
-			) : (
+			) : photos.length > 0 ? (
 				<div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 p-4">
-					{photos.length > 0 ? (
-						photos.map((photo) => (
-							<div
-								key={photo.id}
-								className="mb-4 break-inside-avoid border border-green-100 rounded-lg p-4 bg-white shadow hover:shadow-xl hover:border-green-800 transition-shadow duration-300 delay-75 relative "
-							>
-								<div className="shadow mb-2 relative group cursor-pointer">
-									<img
-										onClick={() => onPhotoClick(photo)}
-										loading="lazy"
-										src={photo.image_url}
-										alt={photo.name}
-										className="w-full rounded-md object-cover"
-									/>
-									{/* Overlay with eye icon */}
-									<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 rounded-md pointer-events-none">
-										<FaEye className="text-white text-4xl" />
-									</div>
+					{photos.map((photo) => (
+						<div
+							key={photo.id}
+							className="mb-4 break-inside-avoid border border-green-100 rounded-lg p-4 bg-white shadow hover:shadow-xl hover:border-green-800 transition-shadow duration-300 delay-75 relative "
+						>
+							<div className="shadow mb-2 relative group cursor-pointer">
+								<img
+									onClick={() => onPhotoClick(photo)}
+									loading="lazy"
+									src={photo.image_url}
+									alt={photo.name}
+									className="w-full rounded-md object-cover"
+								/>
+								{/* Overlay with eye icon */}
+								<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 rounded-md pointer-events-none">
+									<FaEye className="text-white text-4xl" />
 								</div>
-								<div className="text-center">
-									<h3 className="font-semibold text-lg mb-2 truncate text-green-950">
-										{photo.name}
-									</h3>
-									<div className="flex justify-between items-center text-xs text-gray-500">
-										<div className="flex gap-1 items-center">
-											<CiClock1 size={20} />
-											<p>
-												Updated:{" "}
-												{new Date(
-													photo.upload_date
-												).toLocaleDateString()}
-											</p>
-										</div>
-										<div className="flex space-x-2 w-fit pointer-events-auto">
-											<IconWithTooltip
-												icon={
-													<FaEdit
-														size={20}
-														onClick={() =>
-															setEditingPhoto(
-																photo
-															)
-														}
-													/>
-												}
-												className="text-black/50 hover:text-green-950 transition-colors duration-300"
-												text="Edit photo"
-											/>
-											<IconWithTooltip
-												icon={
-													<MdDelete
-														size={20}
-														onClick={(e) => {
-															e.stopPropagation();
-															handleDelete(
-																photo.id,
-																photo.image_url
-															);
-														}}
-													/>
-												}
-												className="text-black/50 hover:text-red-700 transition-colors duration-300"
-												text="Delete photo"
-											/>
-										</div>
+							</div>
+							<div className="text-center">
+								<h3 className="font-semibold text-lg mb-2 truncate text-green-950">
+									{photo.name}
+								</h3>
+								<div className="flex justify-between items-center text-xs text-gray-500">
+									<div className="flex gap-1 items-center">
+										<CiClock1 size={20} />
+										<p>
+											Updated:{" "}
+											{new Date(
+												photo.upload_date
+											).toLocaleDateString()}
+										</p>
+									</div>
+									<div className="flex space-x-2 w-fit pointer-events-auto">
+										<IconWithTooltip
+											icon={
+												<FaEdit
+													size={20}
+													onClick={() =>
+														setEditingPhoto(photo)
+													}
+												/>
+											}
+											className="text-black/50 hover:text-green-950 transition-colors duration-300"
+											text="Edit photo"
+										/>
+										<IconWithTooltip
+											icon={
+												<MdDelete
+													size={20}
+													onClick={(e) => {
+														e.stopPropagation();
+														handleDelete(
+															photo.id,
+															photo.image_url
+														);
+													}}
+												/>
+											}
+											className="text-black/50 hover:text-red-700 transition-colors duration-300"
+											text="Delete photo"
+										/>
 									</div>
 								</div>
 							</div>
-						))
-					) : (
-						<p>No photos found.</p>
-					)}
+						</div>
+					))}
 
 					{/* Editing modal */}
 					{editingPhoto && (
@@ -337,6 +332,10 @@ const PhotoGrid = ({
 						title="Delete"
 						text="Are you sure you want to delete this photo?"
 					/>
+				</div>
+			) : (
+				<div className="text-center py-8 text-gray-500">
+					<p>No photos found.</p>
 				</div>
 			)}
 		</div>
