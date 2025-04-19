@@ -249,7 +249,7 @@ export default function page() {
 			{loading ? (
 				<SpinnerLoading />
 			) : filteredNotes.length === 0 ? (
-				!loading ? (
+				loading ? (
 					<SpinnerLoading />
 				) : (
 					<div className="text-center py-8 text-gray-500">
