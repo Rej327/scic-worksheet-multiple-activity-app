@@ -93,4 +93,4 @@ Use the following credentials to explore the features:
 
 ---
 
-<p align="center"><b>Thank you for reviewing my submission and the opportunity to demonstrate my development skills!</b></p>
+<p align="center"><b>Thank you for the opportunity to demonstrate my skills through this activity!</b></p>
