@@ -20,30 +20,30 @@ This repository contains my submission for the **Sta. Clara International Corpor
 
 ## 🌐 Live Web App
 
+Access the deployed **Multiple Activities App** here:  
 🔗 [https://multiple-activity-app-by-jeff.vercel.app/](https://multiple-activity-app-by-jeff.vercel.app/)
-
 
 ## 🔐 Evaluation Account
 
 - **Email:** dev@staclara.com.ph  
 - **Password:** staclara
 
-> ⚠️ **For Evaluation Only:** Use this account to view implemented features. Please do not modify or delete any data.
+> ⚠️ **Note:** This account is for evaluation purposes only. Please use it only for identifying implemented features.
 
 ---
 
-## 🧭 Navigation
+## ✅ Features Implemented
+
+## 🧭 Index page
 
 - ✅ Authenticated users can navigate through all activities from the index page.
 - 🔐 Unauthenticated users are directed to login/register.
 - 🔓 Authenticated users can:
-  - Access each activity page.
+  - Access each activity page below.
   - Log out.
   - Delete their own account.
 
 ---
-
-## 🚀 Activities Implemented
 
 ### 🔹 Activity 1: To-Do List App
 
