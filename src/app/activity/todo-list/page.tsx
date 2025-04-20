@@ -245,20 +245,10 @@ export default function page() {
 				openCreateModal={openCreateModal}
 			/>
 
-			{/* Notes */}
+			{/* Todos */}
 			{loading ? (
 				<SpinnerLoading />
-			) : filteredNotes.length === 0 ? (
-				!loading ? (
-					<SpinnerLoading />
-				) : (
-					<div className="text-center py-8 text-gray-500">
-						{debounceQuery
-							? "No task match your search"
-							: "No task yet. Create your first note!"}
-					</div>
-				)
-			) : (
+			) : filteredNotes.length > 0 ? (
 				<div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
 					{filteredNotes.map((note, i) => (
 						<div
@@ -275,6 +265,14 @@ export default function page() {
 						</div>
 					))}
 					<div ref={observerRef} className="h-8" />
+				</div>
+			) : !loading ? (
+				<SpinnerLoading />
+			) : (
+				<div className="text-center py-8 text-gray-500">
+					{debounceQuery
+						? "No todos match your search"
+						: "No todos yet. Create your first note!"}
 				</div>
 			)}
 
