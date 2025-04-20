@@ -36,7 +36,7 @@ Use the following credentials to explore the features:
 
 ## ✅ Features Implemented
 
-## 🧭 Index page
+## `/` Index Page
 
 - ✅ Authenticated users can navigate through all activities from the index page.
 - 🔐 Unauthenticated users are directed to login/register.
