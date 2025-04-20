@@ -93,10 +93,4 @@ Use the following credentials to explore the features:
 
 ---
 
-## 📌 Notes
-
-- The app uses a consistent layout and routing structure for easier navigation.
-
----
-
 <p align="center"><b>Thank you for reviewing my submission and the opportunity to demonstrate my development skills!</b></p>
