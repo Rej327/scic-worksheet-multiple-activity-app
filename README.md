@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <img src="https://staclara.com.ph/wp-content/uploads/2021/08/SCIC-trans-logo-new-FULL.png" width="250" alt="Sta. Clara Logo">
+</p>
 
-## Getting Started
+<h1 align="center" style="font-size: 2.5rem;">
+  STA. CLARA INTERNATIONAL CORPORATION
+</h1>
 
-First, run the development server:
+<h2 align="center" style="font-size: 1.5rem;">
+  Pre-Employment Worksheet Activity Submission
+</h2>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<p align="center">
+  Section 2: Coding – 2.1.2 Multiple Activities App
+</p>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This repository contains my submission for the **Sta. Clara International Corporation Pre-Employment Worksheet Activity**, under **Section 2: Coding – 2.1.2 Multiple Activities App** of the Trainee Section. The task involves building a multi-page web app showcasing CRUD operations, authentication, data isolation, and interactive user experiences using Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌐 Live Web App
 
-## Learn More
+🔗 [https://secret-page-app-by-jeff.vercel.app/](https://secret-page-app-by-jeff.vercel.app/)
 
-To learn more about Next.js, take a look at the following resources:
+> *(Note: URL is placeholder unless different for this app)*
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Evaluation Account
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Email:** dev@staclara.com.ph  
+- **Password:** staclara
 
-## Deploy on Vercel
+> ⚠️ **For Evaluation Only:** Use this account to view implemented features. Please do not modify or delete any data.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧭 Navigation
+
+- ✅ Authenticated users can navigate through all activities from the index page.
+- 🔐 Unauthenticated users are directed to login/register.
+- 🔓 Authenticated users can:
+  - Access each activity page.
+  - Log out.
+  - Delete their own account.
+
+---
+
+## 🚀 Activities Implemented
+
+### 🔹 Activity 1: To-Do List App
+
+- ✅ Create, Read, Update, and Delete tasks via Supabase.
+- ✅ Persists state across browser restarts.
+- ✅ Users only see their own tasks.
+
+---
+
+### 🔹 Activity 2: Google Drive Lite (Photo Manager)
+
+- ✅ Users can upload, edit, delete, and view photos.
+- ✅ Search photos by name.
+- ✅ Sort photos by:
+  - Name
+  - Upload date
+
+---
+
+### 🔹 Activity 3: Food Review App
+
+- ✅ Users can upload food photos.
+- ✅ Users can add, edit, and delete reviews (child) on food photos (parent).
+- ✅ Sort by:
+  - Photo name
+  - Upload date
+
+---
+
+### 🔹 Activity 4: Pokémon Review App
+
+- ✅ Search for Pokémon by name using public API.
+- ✅ Users can review Pokémon (review = child, Pokémon = parent).
+- ✅ Sort reviews by:
+  - Pokémon name
+  - Upload date
+
+---
+
+### 🔹 Activity 5: Markdown Notes App
+
+- ✅ Users can create, read, update, and delete notes.
+- ✅ Write in Markdown syntax.
+- ✅ Toggle between raw markdown and rendered preview.
+
+---
+
+## 📌 Notes
+
+- The app uses a consistent layout and routing structure for easier navigation.
+
+---
+
+<p align="center"><b>Thank you for reviewing my submission and the opportunity to demonstrate my development skills!</b></p>
