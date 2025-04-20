@@ -14,6 +14,13 @@ import { useTopLoader } from "nextjs-toploader";
 import SpinnerLoading from "../loader/SpinnerLoading";
 import IsSubmitting from "../tools/IsSubmitting";
 import { PhotoGridProps, PhotoProps } from "@/types/photos";
+import {
+	deletePhotoById,
+	deletePhotoInSupabaseStorage,
+	getPhotos,
+	getPhotoUrl,
+	updatePhotoById,
+} from "@/api/photos/photos";
 
 const PhotoGrid = ({
 	sortBy,
@@ -32,24 +39,23 @@ const PhotoGrid = ({
 	>(null);
 	const [isSaving, setIsSaving] = useState(false);
 
-	const pathname = usePathname(); // Get the current path
-	const currentCategory = pathname.split("/").pop(); // Extract the category from the path
-	const { userId } = useSession(); // Get userId from session context
-	const loader = useTopLoader(); // Initialize the loader
+	const pathname = usePathname();
+	const currentCategory = pathname.split("/").pop();
+	const { userId } = useSession();
+	const loader = useTopLoader();
 
-	// Fetch photos for the current user and category
+	// Fetch photos for the current user and category(page link or page title)
 	const fetchPhotos = async () => {
 		setLoading(true);
-		if (!userId) return; // Ensure the user ID is available
-		loader.setProgress(0.25); // Start loader progress
+		if (!userId) return;
+		loader.setProgress(0.25);
 
 		try {
-			const { data, error } = await supabase
-				.from("photos")
-				.select("*")
-				.eq("user_id", userId) // Filter by current user ID
-				.eq("category", currentCategory) // Filter by category
-				.order(sortBy, { ascending: sortBy === "name" });
+			const { data, error } = await getPhotos({
+				userId: userId,
+				currentCategory: currentCategory!,
+				sortBy,
+			});
 
 			if (error) {
 				throw error;
@@ -60,18 +66,18 @@ const PhotoGrid = ({
 			);
 
 			setPhotos(filteredPhotos || []);
-			loader.setProgress(0.75); // Update loader progress
+			loader.setProgress(0.75);
 		} catch (error) {
 			console.error("Error fetching photos:", error);
 			toast.error("Failed to load photos.");
 		} finally {
 			setLoading(false);
-			loader.done(); // Finish loader
+			loader.done();
 		}
 	};
 
 	const deletePhoto = async (id: string, imageUrl: string) => {
-		loader.setProgress(0.25); // Start loader for delete operation
+		loader.setProgress(0.25);
 		try {
 			// Extract the file path from the image URL
 			const filePath = new URL(imageUrl).pathname
@@ -80,31 +86,28 @@ const PhotoGrid = ({
 				.join("/");
 
 			// Delete the photo from Supabase storage
-			const { error: storageError } = await supabase.storage
-				.from("images")
-				.remove([filePath]);
+			const { error: storageError } = await deletePhotoInSupabaseStorage(
+				filePath
+			);
 
 			if (storageError) {
 				throw new Error("Failed to delete photo from storage.");
 			}
 
 			// Delete the photo from the database
-			const { error: dbError } = await supabase
-				.from("photos")
-				.delete()
-				.eq("id", id);
+			const { error: dbError } = await deletePhotoById(id);
 
 			if (dbError) {
 				throw dbError;
 			}
 
 			toast.success("Photo deleted successfully!");
-			fetchPhotos(); // Refresh photos after deletion
+			fetchPhotos();
 		} catch (error) {
 			console.error("Error deleting photo:", error);
 			toast.error("Failed to delete photo.");
 		} finally {
-			loader.done(); // Finish loader
+			loader.done();
 		}
 	};
 
@@ -128,13 +131,11 @@ const PhotoGrid = ({
 	const updatePhoto = async () => {
 		if (!editingPhoto) return;
 		setIsSaving(true);
-		loader.setProgress(0.25); // Start loader for update operation
+		loader.setProgress(0.25);
 		try {
 			let imageUrl = editingPhoto.image_url;
 
-			// Step 1: Replace the photo if a new file is uploaded
 			if (newImageFile) {
-				// Extract the path of the existing photo from its URL
 				const existingFilePath = new URL(
 					editingPhoto.image_url
 				).pathname
@@ -142,10 +143,8 @@ const PhotoGrid = ({
 					.slice(2)
 					.join("/");
 
-				// Delete the existing photo from storage
-				const { error: deleteError } = await supabase.storage
-					.from("images")
-					.remove([existingFilePath]);
+				const { error: deleteError } =
+					await deletePhotoInSupabaseStorage(existingFilePath);
 
 				if (deleteError) {
 					throw new Error(
@@ -165,18 +164,17 @@ const PhotoGrid = ({
 				}
 
 				// Get the public URL for the uploaded file
-				const { data: publicUrlData } = supabase.storage
-					.from("images")
-					.getPublicUrl(fileName);
+				const { data: publicUrlData } = getPhotoUrl(fileName);
 
 				imageUrl = publicUrlData.publicUrl;
 			}
 
-			// Step 2: Update the photo record in the database
-			const { error } = await supabase
-				.from("photos")
-				.update({ name: editingPhoto.name, image_url: imageUrl })
-				.eq("id", editingPhoto.id);
+			// Update the photo record in the database
+			const { error } = await updatePhotoById({
+				name: editingPhoto.name,
+				image_url: imageUrl,
+				id: editingPhoto.id,
+			});
 
 			if (error) {
 				throw error;
@@ -185,7 +183,7 @@ const PhotoGrid = ({
 			toast.success("Photo updated successfully!");
 			setEditingPhoto(null);
 			setNewImageFile(null);
-			fetchPhotos(); // Refresh photos after update
+			fetchPhotos();
 		} catch (error) {
 			console.error("Error updating photo:", error);
 			toast.error(`Failed to update photo`);
@@ -196,7 +194,7 @@ const PhotoGrid = ({
 	};
 
 	useEffect(() => {
-		if (userId) fetchPhotos(); // Fetch photos only when userId is available
+		if (userId) fetchPhotos();
 	}, [userId, sortBy, refreshFlag, search]);
 
 	return (
@@ -218,7 +216,6 @@ const PhotoGrid = ({
 									alt={photo.name}
 									className="w-full rounded-md object-cover"
 								/>
-								{/* Overlay with eye icon */}
 								<div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 rounded-md pointer-events-none">
 									<FaEye className="text-white text-4xl" />
 								</div>
@@ -323,21 +320,21 @@ const PhotoGrid = ({
 							</div>
 						</div>
 					)}
-
-					{/* Confirmation delete modal */}
-					<ConfirmationDeleteModal
-						onConfirm={() => confirmDelete()}
-						isOpen={confirmationModal}
-						onClose={handleClose}
-						title="Delete"
-						text="Are you sure you want to delete this photo?"
-					/>
 				</div>
 			) : (
 				<div className="text-center py-8 text-gray-500">
 					<p>No photos found.</p>
 				</div>
 			)}
+
+			{/* Confirmation delete modal */}
+			<ConfirmationDeleteModal
+				onConfirm={() => confirmDelete()}
+				isOpen={confirmationModal}
+				onClose={handleClose}
+				title="Delete"
+				text="Are you sure you want to delete this photo?"
+			/>
 		</div>
 	);
 };

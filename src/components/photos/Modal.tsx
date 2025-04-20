@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
 		if (isOpen) {
 			setVisible(true);
 		} else {
-			const timer = setTimeout(() => setVisible(false), 300); // Match the duration of the fade-out animation
+			const timer = setTimeout(() => setVisible(false), 300);
 			return () => clearTimeout(timer);
 		}
 	}, [isOpen]);

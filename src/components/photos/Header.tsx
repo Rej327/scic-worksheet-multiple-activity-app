@@ -8,18 +8,17 @@ import {
 } from "@/utils/inputsData";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaPlus, FaUpload } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
 
 const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 	const [search, setSearch] = useState("");
 	const [title, setTitle] = useState<string>("");
 
-	const pathname = usePathname(); // Get the current path
-	const currentCategory = pathname ? pathname.split("/").pop() : ""; // Ensure pathname is valid
+	const pathname = usePathname();
+	const currentCategory = pathname ? pathname.split("/").pop() : "";
 
+	// Title page depening on page link
 	useEffect(() => {
-		// Switch to update the title based on the current category
 		switch (currentCategory) {
 			case "pokemon-review-app":
 				setTitle("Pokémon Photo Archive");
@@ -31,10 +30,10 @@ const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 				setTitle("Mini Google Drive");
 				break;
 			default:
-				setTitle("Default Title"); // Default title if no match
+				setTitle("Default Title");
 				break;
 		}
-	}, [currentCategory]); // Depend on currentCategory so it updates when the path changes
+	}, [currentCategory]);
 
 	// Load initial value from localStorage
 	const searhName =
@@ -52,9 +51,9 @@ const Header = ({ onSearch, onAddPhoto }: HeaderProps) => {
 
 		const timeout = setTimeout(() => {
 			onSearch(search);
-		}, 1500); // debounce delay in ms
+		}, 1500);
 
-		return () => clearTimeout(timeout); // cleanup on re-render
+		return () => clearTimeout(timeout);
 	}, [search, onSearch]);
 
 	return (

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
-import { Toaster, toast } from "react-hot-toast";
-import { supabase } from "@/helper/connection";
+import { toast } from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -9,6 +8,12 @@ import ConfirmationDeleteModal from "../modal/ConfirmationModal";
 import IsSubmitting from "../tools/IsSubmitting";
 import { useTopLoader } from "nextjs-toploader";
 import { PhotoDetailsModalProps, Review } from "@/types/photos";
+import {
+	addReviewsToSelectedPhoto,
+	deleteReviewById,
+	editReviewToSelectedPhoto,
+	getReviewsById,
+} from "@/api/photos/reviews";
 
 const PhotoDetailsModal = ({
 	isOpen,
@@ -35,10 +40,7 @@ const PhotoDetailsModal = ({
 		if (!photo) return;
 		loader.setProgress(0.25);
 
-		const { data, error } = await supabase
-			.from("reviews")
-			.select("*")
-			.eq("photo_id", photo.id);
+		const { data, error } = await getReviewsById(photo.id);
 
 		if (error) {
 			console.error("Error fetching reviews:", error);
@@ -54,10 +56,11 @@ const PhotoDetailsModal = ({
 		if (!photo || !newReview.trim()) return;
 		setisSaving(true);
 		loader.setProgress(0.25);
-		const { error } = await supabase.from("reviews").insert({
-			photo_id: photo.id,
+
+		const { error } = await addReviewsToSelectedPhoto({
+			photoId: photo.id,
 			content: newReview,
-			user_id: photo.user_id,
+			userId: photo.user_id,
 		});
 
 		if (error) {
@@ -78,10 +81,10 @@ const PhotoDetailsModal = ({
 
 		setisEditSaving(true);
 		loader.setProgress(0.25);
-		const { error } = await supabase
-			.from("reviews")
-			.update({ content: editingContent })
-			.eq("id", id);
+		const { error } = await editReviewToSelectedPhoto({
+			editingContent: editingContent,
+			id,
+		});
 
 		if (error) {
 			toast.error("Error updating review");
@@ -115,10 +118,7 @@ const PhotoDetailsModal = ({
 		if (!deleteReviewId) return;
 
 		loader.setProgress(0.25);
-		const { error } = await supabase
-			.from("reviews")
-			.delete()
-			.eq("id", deleteReviewId);
+		const { error } = await deleteReviewById(deleteReviewId)
 
 		if (error) {
 			toast.error("Error deleting review");

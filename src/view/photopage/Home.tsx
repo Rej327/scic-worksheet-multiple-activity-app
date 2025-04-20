@@ -14,17 +14,17 @@ export default function Home() {
 	const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false); // Placeholder for Add Photo modal
 	const [refreshFlag, setRefreshFlag] = useState(false); // To refresh the photo grid
 
-	// Function to handle opening the Add Photo modal
+	// Handle opening the Add Photo modal
 	const handleAddPhoto = () => {
 		setIsAddPhotoModalOpen(true);
 	};
 
-	// Function to handle refreshing the photo grid
+	// Handle refreshing the photo grid
 	const refreshPhotoGrid = () => {
 		setRefreshFlag((prev) => !prev);
 	};
 
-	// Function to close the Add Photo modal
+	// Close the Add Photo modal
 	const closeAddPhotoModal = () => {
 		setIsAddPhotoModalOpen(false);
 	};

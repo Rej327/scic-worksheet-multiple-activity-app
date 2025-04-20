@@ -61,6 +61,7 @@ export default function page() {
 
 	const fetchNotes = async (page: number) => {
 		setIsFetching(true);
+		setLoading(true);
 
 		const pageSize = 10;
 		const { data, error } = await getNotes(page, pageSize);
@@ -112,10 +113,12 @@ export default function page() {
 
 	useEffect(() => {
 		loader.setProgress(0.25);
+		setLoading(true);
 		const debounce = setTimeout(() => {
 			setDebounceQuery(searchQuery);
 			saveToStorage(LOCAL_STORAGE_KEYS.searchQuery, searchQuery);
 			loader.done();
+			setLoading(false);
 		}, 1500);
 
 		return () => clearTimeout(debounce);
@@ -264,8 +267,6 @@ export default function page() {
 					))}
 					<div ref={observerRef} className="h-8" />
 				</div>
-			) : !loading ? (
-				<SpinnerLoading />
 			) : (
 				<div className="text-center py-8 text-gray-500">
 					{debounceQuery
