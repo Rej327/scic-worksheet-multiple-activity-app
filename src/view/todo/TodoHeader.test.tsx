@@ -12,7 +12,7 @@ describe.only("TodoHeader", () => {
     mockOpenCreateModal.mockClear();
   });
 
-  test("renders MarkDownHeader with correct elements", () => {
+  it("renders MarkDownHeader with correct elements", () => {
     const searchQuery = "test query";
 
     // Render the Header component with the mock functions and test data
@@ -36,7 +36,7 @@ describe.only("TodoHeader", () => {
     expect(screen.getByText("New Note")).toBeInTheDocument();
   });
 
-  test("calls openCreateModal when the 'New Note' button is clicked", () => {
+  it("calls openCreateModal when the 'New Note' button is clicked", () => {
     const searchQuery = "test query";
 
     render(
@@ -53,7 +53,7 @@ describe.only("TodoHeader", () => {
     expect(mockOpenCreateModal).toHaveBeenCalledTimes(1);
   });
 
-  test("calls setSearchQuery when the search input changes", () => {
+  it("calls setSearchQuery when the search input changes", () => {
     const searchQuery = "test query";
 
     render(

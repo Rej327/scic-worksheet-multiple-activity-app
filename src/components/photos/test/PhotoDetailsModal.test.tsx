@@ -30,7 +30,7 @@ describe("PhotoDetailsModal", () => {
 
 	const editingContent = "Initial review content";
 
-	test("renders modal with image and name", () => {
+	it("renders modal with image and name", () => {
 		render(
 			<PhotoDetailsModal
 				isOpen={true}
@@ -102,7 +102,7 @@ describe("PhotoDetailsModal", () => {
 				</div>
 				<div className="flex gap-2 items-center">
 					<button
-          data-testid='edit-button'
+						data-testid="edit-button"
 						onClick={() => {
 							mockSetEditingId(review.id);
 							mockSetEditingContent(review.content);
@@ -112,7 +112,7 @@ describe("PhotoDetailsModal", () => {
 						<FaEdit size={20} />
 					</button>
 					<button
-          data-testid='delete-button'
+						data-testid="delete-button"
 						onClick={() => mockHandleDeleteModal(review.id)}
 						className="text-red-500"
 					>
@@ -192,7 +192,7 @@ describe("PhotoDetailsModal", () => {
 					className="flex-grow border h-[40px] border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:shadow-md hover:shadow-md duration-300"
 				/>
 				<button
-          data-testid='save-button'
+					data-testid="save-button"
 					onClick={mockHandleAddReview}
 					className="ml-2 px-4 py-2 bg-green-600 hover:bg-green-700 duration-300 text-white rounded-md cursor-pointer"
 					disabled={true}

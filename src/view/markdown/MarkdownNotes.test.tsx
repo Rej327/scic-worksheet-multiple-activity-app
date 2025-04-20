@@ -25,7 +25,7 @@ describe.only("MarkdownNotes", () => {
 		mockOnDeleteNote.mockClear();
 	});
 
-	test("renders note content correctly", () => {
+	it("renders note content correctly", () => {
 		render(
 			<MarkdownNotes
 				note={note}
@@ -49,7 +49,7 @@ describe.only("MarkdownNotes", () => {
 		expect(screen.getByText("Updated: 4/15/2025")).toBeInTheDocument();
 	});
 
-	test("calls onViewNote when the card is clicked", () => {
+	it("calls onViewNote when the card is clicked", () => {
 		render(
 			<MarkdownNotes
 				note={note}
@@ -66,7 +66,7 @@ describe.only("MarkdownNotes", () => {
 		expect(mockOnViewNote).toHaveBeenCalledWith(note.id);
 	});
 
-	test("calls onEditNote when the edit icon is clicked", () => {
+	it("calls onEditNote when the edit icon is clicked", () => {
 		render(
 			<IconWithTooltip
 				text="Edit note"
@@ -80,7 +80,7 @@ describe.only("MarkdownNotes", () => {
 		expect(mockOnEditNote).toHaveBeenCalledWith("1");
 	});
 
-	test("calls onDeleteNote when the delete icon is clicked", () => {
+	it("calls onDeleteNote when the delete icon is clicked", () => {
 		render(
 			<IconWithTooltip
 				text="Delete note"
