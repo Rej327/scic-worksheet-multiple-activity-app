@@ -48,6 +48,7 @@ export default function page() {
 	const router = useRouter();
 
 	useEffect(() => {
+		loader.setProgress(0.25);
 		const checkUser = async () => {
 			const { data, error } = await supabase.auth.getUser();
 
@@ -57,11 +58,11 @@ export default function page() {
 		};
 
 		checkUser();
+		loader.done();
 	}, [router]);
 
 	const fetchNotes = async (page: number) => {
 		setIsFetching(true);
-		setLoading(true);
 
 		const pageSize = 10;
 		const { data, error } = await getNotes(page, pageSize);
@@ -75,7 +76,6 @@ export default function page() {
 			setHasMore(false);
 		}
 
-		setLoading(false);
 		setNotes((prev) => [...prev, ...data]);
 		setIsFetching(false);
 	};

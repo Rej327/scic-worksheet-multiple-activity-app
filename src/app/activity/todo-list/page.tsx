@@ -63,7 +63,6 @@ export default function page() {
 
 	const fetchNotes = async (page: number) => {
 		setIsFetching(true);
-		setLoading(true);
 
 		const pageSize = 10;
 		const { data, error } = await getNotes(page, pageSize);
@@ -77,7 +76,6 @@ export default function page() {
 			setHasMore(false);
 		}
 
-		setLoading(false);
 		setNotes((prev) => [...prev, ...data]);
 		setIsFetching(false);
 	};
