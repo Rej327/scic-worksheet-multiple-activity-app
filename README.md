@@ -25,6 +25,8 @@ Access the deployed **Multiple Activities App** here:
 
 ## 🔐 Evaluation Account
 
+Use the following credentials to explore the features:
+
 - **Email:** dev@staclara.com.ph  
 - **Password:** staclara
 
