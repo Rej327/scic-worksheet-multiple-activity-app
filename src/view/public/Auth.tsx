@@ -119,7 +119,6 @@ export default function Auth({ supabase }: DashboardProps) {
 				<div className="-mt-28 z-100 w-full max-w-md bg-white p-6 rounded-lg shadow-md">
 					<Image
 						src={scic_logo}
-						loading="lazy"
 						alt="Logo"
 						width={250}
 						height={150}
@@ -136,7 +135,7 @@ export default function Auth({ supabase }: DashboardProps) {
 							<div>
 								<input
 									data-testid="fullname"
-									className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+									className="border border-gray-300 p-2 w-full rounded focus:outline-green-600"
 									type="text"
 									placeholder="Full Name"
 									value={fullname}
@@ -153,14 +152,22 @@ export default function Auth({ supabase }: DashboardProps) {
 						)}
 
 						<div>
+							<p className="text-right text-xs text-red-800">
+								Note: Email verification is disabled for
+								testing.
+							</p>
 							<input
 								data-testid="email"
-								className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+								className={`border border-gray-300 p-2 w-full rounded focus:outline-green-600 ${
+									errors.email && "border-red-500"
+								}`}
 								type="email"
 								placeholder="Email"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
+								formNoValidate
 							/>
+
 							{errors.email && (
 								<p className="text-red-500 text-sm mt-1">
 									{errors.email}
@@ -171,7 +178,9 @@ export default function Auth({ supabase }: DashboardProps) {
 						<div>
 							<input
 								data-testid="password"
-								className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:shadow-md hover:shadow-md duration-300"
+								className={`border border-gray-300 p-2 w-full rounded focus:outline-green-600 ${
+									errors.password && "border-red-500"
+								}`}
 								type="password"
 								placeholder="Password"
 								value={password}
@@ -192,12 +201,33 @@ export default function Auth({ supabase }: DashboardProps) {
 								loading ? "opacity-60 cursor-not-allowed" : ""
 							}`}
 						>
+							{loading && (
+								<svg
+									className="animate-spin h-5 w-5 text-white"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+								>
+									<circle
+										className="opacity-25"
+										cx="12"
+										cy="12"
+										r="10"
+										stroke="currentColor"
+										strokeWidth="4"
+									></circle>
+									<path
+										className="opacity-75"
+										fill="currentColor"
+										d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+									></path>
+								</svg>
+							)}
 							{loading
-								? "Please wait "
+								? "Please wait..."
 								: isRegistering
 								? "Register"
 								: "Login"}
-							{loading && <IsSubmitting />}
 						</button>
 					</form>
 
