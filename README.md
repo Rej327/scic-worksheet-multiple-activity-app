@@ -20,9 +20,8 @@ This repository contains my submission for the **Sta. Clara International Corpor
 
 ## 🌐 Live Web App
 
-🔗 [https://secret-page-app-by-jeff.vercel.app/](https://secret-page-app-by-jeff.vercel.app/)
+🔗 [https://multiple-activity-app-by-jeff.vercel.app/](https://multiple-activity-app-by-jeff.vercel.app/)
 
-> *(Note: URL is placeholder unless different for this app)*
 
 ## 🔐 Evaluation Account
 
