@@ -26,6 +26,7 @@ const PhotoGrid = ({
 	sortBy,
 	refreshFlag,
 	search,
+	order,
 	onPhotoClick,
 }: PhotoGridProps) => {
 	const [photos, setPhotos] = useState<PhotoProps[]>([]);
@@ -44,6 +45,7 @@ const PhotoGrid = ({
 	const { userId } = useSession();
 	const loader = useTopLoader();
 
+
 	// Fetch photos for the current user and category(page link or page title)
 	const fetchPhotos = async () => {
 		setLoading(true);
@@ -55,12 +57,14 @@ const PhotoGrid = ({
 				userId: userId,
 				currentCategory: currentCategory!,
 				sortBy,
+				order,
 			});
 
 			if (error) {
 				throw error;
 			}
 
+			// Filter photos if search term is provided
 			const filteredPhotos = data?.filter((photo) =>
 				photo.name.toLowerCase().includes(search.toLowerCase())
 			);
@@ -75,7 +79,6 @@ const PhotoGrid = ({
 			loader.done();
 		}
 	};
-
 	const deletePhoto = async (id: string, imageUrl: string) => {
 		loader.setProgress(0.25);
 		try {
@@ -195,7 +198,7 @@ const PhotoGrid = ({
 
 	useEffect(() => {
 		if (userId) fetchPhotos();
-	}, [userId, sortBy, refreshFlag, search]);
+	}, [userId, sortBy, refreshFlag, search, order]);
 
 	return (
 		<div>

@@ -38,6 +38,7 @@ export interface PhotoDetailsModalProps {
 
 export type PhotoGridProps = {
 	sortBy: "name" | "upload_date";
+	order: "asc" | "desc";
 	refreshFlag: boolean;
 	search: string;
 	onPhotoClick: (photo: PhotoProps) => void;
@@ -52,5 +53,6 @@ export type PhotoProps = {
 
 export interface SortingControlsProps {
 	sortBy: "name" | "upload_date";
-	setSortBy: (value: "name" | "upload_date") => void;
+	setSortBy: (field: "name" | "upload_date") => void;
+	setOrderBy: (order: "asc" | "desc") => void;
 }

@@ -4,17 +4,20 @@ export const getPhotos = async ({
 	userId,
 	currentCategory,
 	sortBy,
+	order,
 }: {
 	userId: string;
 	currentCategory: string;
 	sortBy: "name" | "upload_date";
+	order: "asc" | "desc";
 }) => {
 	const result = await supabase
 		.from("photos")
 		.select("*")
 		.eq("user_id", userId)
 		.eq("category", currentCategory)
-		.order(sortBy, { ascending: sortBy === "name" })
+		.order(sortBy, { ascending: order === "asc" });
+		
 
 	return result;
 };

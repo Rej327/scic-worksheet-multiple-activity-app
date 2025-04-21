@@ -9,6 +9,7 @@ import React, { useState } from "react";
 
 export default function Home() {
 	const [sortBy, setSortBy] = useState<"name" | "upload_date">("name");
+	const [orderBy, setOrderBy] = useState<"asc" | "desc">("asc");
 	const [search, setSearch] = useState("");
 	const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null); // For the photo details modal
 	const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false); // Placeholder for Add Photo modal
@@ -38,14 +39,20 @@ export default function Home() {
 			/>
 
 			{/* Sorting Controls */}
-			<SortingControlls sortBy={sortBy} setSortBy={setSortBy} />
+			<SortingControlls
+				sortBy={sortBy}
+				setSortBy={setSortBy}
+				orderBy={orderBy}
+				setOrderBy={setOrderBy}
+			/>
 
 			{/* Photo Grid Section */}
 			<PhotoGrid
 				sortBy={sortBy}
+				order={orderBy}
 				refreshFlag={refreshFlag}
-				search={search} // Pass search term
-				onPhotoClick={(photo) => setSelectedPhoto(photo)} // Handle photo click
+				search={search}
+				onPhotoClick={(photo) => setSelectedPhoto(photo)}
 			/>
 
 			{/* Photo Details Modal */}

@@ -1,66 +1,81 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import SortingControlls from "../SortingContolls";
 
-describe.only("SortingControlls", () => {
-	it("renders both sorting buttons correctly", () => {
-		// Arrange
-		const mockSetSortBy = jest.fn();
-		const { getByText } = render(
-			<SortingControlls sortBy="name" setSortBy={mockSetSortBy} />
-		);
+describe("SortingControlls Component", () => {
+  let setSortByMock: jest.Mock;
+  let setOrderByMock: jest.Mock;
 
-		// Act
-		const sortByNameButton = getByText("Sort by Name");
-		const sortByUploadDateButton = getByText("Sort by Upload Date");
+  beforeEach(() => {
+    setSortByMock = jest.fn();
+    setOrderByMock = jest.fn();
+  });
 
-		// Assert
-		expect(sortByNameButton).toBeInTheDocument();
-		expect(sortByUploadDateButton).toBeInTheDocument();
-	});
+  it("renders buttons for sorting by name and upload date", () => {
+    render(
+      <SortingControlls
+        sortBy="name"
+        orderBy="asc"
+        setSortBy={setSortByMock}
+        setOrderBy={setOrderByMock}
+      />
+    );
 
-	it("applies the correct active styles to the selected sorting button", () => {
-		// Arrange
-		const mockSetSortBy = jest.fn();
-		const { getByText, rerender } = render(
-			<SortingControlls sortBy="name" setSortBy={mockSetSortBy} />
-		);
+    expect(screen.getByText("Sort by Name ↑")).toBeInTheDocument();
+    expect(screen.getByText("Sort by Upload Date")).toBeInTheDocument();
+  });
 
-		// Act
-		const sortByNameButton = getByText("Sort by Name");
-		const sortByUploadDateButton = getByText("Sort by Upload Date");
+  it("calls setSortBy and setOrderBy correctly when sort by name is clicked", () => {
+    render(
+      <SortingControlls
+        sortBy="upload_date"
+        orderBy="asc"
+        setSortBy={setSortByMock}
+        setOrderBy={setOrderByMock}
+      />
+    );
 
-		// Assert
-		expect(sortByNameButton).toHaveClass("bg-green-600 text-white");
-		expect(sortByUploadDateButton).toHaveClass("bg-gray-300");
+    const nameButton = screen.getByText("Sort by Name");
+    fireEvent.click(nameButton);
 
-		// Re-render with sortBy="upload_date"
-		rerender(
-			<SortingControlls sortBy="upload_date" setSortBy={mockSetSortBy} />
-		);
+    expect(setSortByMock).toHaveBeenCalledWith("name");
+    expect(setOrderByMock).toHaveBeenCalledWith("asc");
+  });
 
-		// Assert after re-rendering
-		expect(sortByNameButton).toHaveClass("bg-gray-300");
-		expect(sortByUploadDateButton).toHaveClass("bg-green-600 text-white");
-	});
+  it("toggles orderBy when the same sort field button is clicked", () => {
+    render(
+      <SortingControlls
+        sortBy="name"
+        orderBy="asc"
+        setSortBy={setSortByMock}
+        setOrderBy={setOrderByMock}
+      />
+    );
 
-	it("calls setSortBy with the correct value when buttons are clicked", () => {
-		// Arrange
-		const mockSetSortBy = jest.fn();
-		const { getByText } = render(
-			<SortingControlls sortBy="name" setSortBy={mockSetSortBy} />
-		);
+    const nameButton = screen.getByText("Sort by Name ↑");
+    fireEvent.click(nameButton);
 
-		// Act
-		const sortByNameButton = getByText("Sort by Name");
-		const sortByUploadDateButton = getByText("Sort by Upload Date");
+    expect(setSortByMock).not.toHaveBeenCalled();
+    expect(setOrderByMock).toHaveBeenCalledWith("desc");
 
-		fireEvent.click(sortByNameButton);
-		fireEvent.click(sortByUploadDateButton);
+    fireEvent.click(nameButton);
+    expect(setOrderByMock).toHaveBeenCalledWith("desc");
+  });
 
-		// Assert
-		expect(mockSetSortBy).toHaveBeenCalledTimes(2);
-		expect(mockSetSortBy).toHaveBeenCalledWith("name");
-		expect(mockSetSortBy).toHaveBeenCalledWith("upload_date");
-	});
+  it("switches to a new sort field and resets order to ascending", () => {
+    render(
+      <SortingControlls
+        sortBy="name"
+        orderBy="desc"
+        setSortBy={setSortByMock}
+        setOrderBy={setOrderByMock}
+      />
+    );
+
+    const uploadDateButton = screen.getByText("Sort by Upload Date");
+    fireEvent.click(uploadDateButton);
+
+    expect(setSortByMock).toHaveBeenCalledWith("upload_date");
+    expect(setOrderByMock).toHaveBeenCalledWith("asc");
+  });
 });
