@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import IsSubmitting from "../tools/IsSubmitting";
 import { useTopLoader } from "nextjs-toploader";
 import {
+	clearAddDrive,
 	clearAddFood,
 	clearAddPokemon,
 	loadFromStorage,
@@ -57,6 +58,17 @@ const AddPhotoModal = ({
 				break;
 			default:
 				break;
+		}
+	};
+
+	const handleClose = () => {
+		onClose();
+		if (currentCategory === "pokemon-review-app") {
+			clearAddPokemon();
+		} else if (currentCategory === "food-review-app") {
+			clearAddFood();
+		} else if (currentCategory === "google-drive-lite") {
+			clearAddDrive();
 		}
 	};
 
@@ -119,22 +131,13 @@ const AddPhotoModal = ({
 			setName("");
 			setFile(null);
 			onPhotoAdded(); // Refresh the photo grid
-			onClose();
+			handleClose();
 		} catch (error) {
 			console.error(error);
 			toast.error("Something went wrong. Please try again.");
 		} finally {
 			setLoading(false);
 			loader.done();
-		}
-	};
-
-	const handleClose = () => {
-		onClose();
-		if (currentCategory === "pokemon-review-app") {
-			clearAddPokemon();
-		} else if (currentCategory === "food-review-app") {
-			clearAddFood();
 		}
 	};
 
@@ -155,7 +158,7 @@ const AddPhotoModal = ({
 						Photo Name
 					</label>
 					<input
-					data-testid="name-input"
+						data-testid="name-input"
 						type="text"
 						value={name}
 						onChange={(e) => handleNameChange(e.target.value)}

@@ -33,6 +33,10 @@ export const clearTodoStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.todoContent);
 };
 
+export const clearAddDrive = () => {
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.addDrive);
+};
+
 export const clearAddPokemon = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.addPokemon);
 };
@@ -55,4 +59,7 @@ export const resetStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.todoTitle);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.todoContent);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.searchDrive);
+	localStorage.removeItem(LOCAL_STORAGE_KEYS.addDrive);
+	localStorage.removeItem("sortBy");
+	localStorage.removeItem("orderBy");
 };
