@@ -5,7 +5,7 @@ import Header from "@/components/photos/Header";
 import PhotoDetailsModal from "@/components/photos/PhotoDetailsModal";
 import PhotoGrid from "@/components/photos/PhotoGrid";
 import SortingControlls from "@/components/photos/SortingContolls";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
 	const [sortBy, setSortBy] = useState<"name" | "upload_date">("name");
@@ -14,6 +14,30 @@ export default function Home() {
 	const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null); // For the photo details modal
 	const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false); // Placeholder for Add Photo modal
 	const [refreshFlag, setRefreshFlag] = useState(false); // To refresh the photo grid
+
+	// Load sorting preferences from localStorage only in the browser
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			const savedSortBy = localStorage.getItem("sortBy");
+			const savedOrderBy = localStorage.getItem("orderBy");
+
+			if (savedSortBy === "name" || savedSortBy === "upload_date") {
+				setSortBy(savedSortBy as "name" | "upload_date");
+			}
+
+			if (savedOrderBy === "asc" || savedOrderBy === "desc") {
+				setOrderBy(savedOrderBy as "asc" | "desc");
+			}
+		}
+	}, []);
+
+	// Save sorting preferences to localStorage whenever they change
+	useEffect(() => {
+		if (typeof window !== "undefined") {
+			localStorage.setItem("sortBy", sortBy);
+			localStorage.setItem("orderBy", orderBy);
+		}
+	}, [sortBy, orderBy]);
 
 	// Handle opening the Add Photo modal
 	const handleAddPhoto = () => {
