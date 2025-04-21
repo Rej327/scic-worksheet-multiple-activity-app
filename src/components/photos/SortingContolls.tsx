@@ -9,17 +9,17 @@ const SortingControls = ({
 	setOrderBy,
 	orderBy,
 }: SortingControlsProps & { orderBy: "asc" | "desc" }) => {
-	// Handle sorting button clicks and update localStorage directly
+	
 	const handleSortClick = (field: "name" | "upload_date") => {
 		if (sortBy === field) {
 			const newOrderBy = orderBy === "asc" ? "desc" : "asc";
 			setOrderBy(newOrderBy);
-			localStorage.setItem("orderBy", newOrderBy); // Save to localStorage
+			localStorage.setItem("orderBy", newOrderBy); 
 		} else {
 			setSortBy(field);
-			setOrderBy("asc"); // Default to ascending when switching fields
-			localStorage.setItem("sortBy", field); // Save to localStorage
-			localStorage.setItem("orderBy", "asc"); // Save to localStorage
+			setOrderBy("asc"); 
+			localStorage.setItem("sortBy", field);
+			localStorage.setItem("orderBy", "asc"); 
 		}
 	};
 

@@ -11,9 +11,9 @@ export default function Home() {
 	const [sortBy, setSortBy] = useState<"name" | "upload_date">("name");
 	const [orderBy, setOrderBy] = useState<"asc" | "desc">("asc");
 	const [search, setSearch] = useState("");
-	const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null); // For the photo details modal
-	const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false); // Placeholder for Add Photo modal
-	const [refreshFlag, setRefreshFlag] = useState(false); // To refresh the photo grid
+	const [selectedPhoto, setSelectedPhoto] = useState<any | null>(null);
+	const [isAddPhotoModalOpen, setIsAddPhotoModalOpen] = useState(false);
+	const [refreshFlag, setRefreshFlag] = useState(false); 
 
 	// Load sorting preferences from localStorage only in the browser
 	useEffect(() => {
@@ -93,7 +93,7 @@ export default function Home() {
 				<AddPhotoModal
 					isOpen={isAddPhotoModalOpen}
 					onClose={closeAddPhotoModal}
-					onPhotoAdded={refreshPhotoGrid} // Refresh photo grid after adding a photo
+					onPhotoAdded={refreshPhotoGrid}
 				/>
 			)}
 		</main>
