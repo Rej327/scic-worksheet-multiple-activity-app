@@ -16,6 +16,9 @@ const TodoNotes: React.FC<TodoCardProps> = ({
 			className="break-inside-avoid border border-green-100 rounded-lg p-4 bg-white shadow hover:shadow-xl hover:border-green-800 transition-shadow duration-300 delay-75 cursor-pointer"
 			onClick={() => onViewNote(note.id)}
 		>
+			<p className="capitalize bg-slate-400 w-fit rounded-full px-2">
+				{note.level}
+			</p>
 			<h3 className="font-semibold text-lg mb-2 truncate text-green-950">
 				{note.title}
 			</h3>

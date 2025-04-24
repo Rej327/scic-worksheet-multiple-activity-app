@@ -15,7 +15,8 @@ import IsSubmitting from "../tools/IsSubmitting";
 interface MarkdownEditorProps {
 	initialContent?: string;
 	initialTitle?: string;
-	onSave: (title: string, content: string) => void;
+	initialLevel?: string;
+	onSave: (title: string, content: string, level: string) => void;
 	onCancel: () => void;
 	isEditing?: boolean;
 }
@@ -23,6 +24,7 @@ interface MarkdownEditorProps {
 const TodoEditor: React.FC<MarkdownEditorProps> = ({
 	initialContent = "",
 	initialTitle = "",
+	initialLevel = "",
 	onSave,
 	onCancel,
 }) => {
@@ -39,6 +41,15 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 		{}
 	);
 	const loader = useTopLoader();
+
+	//added state
+	const [level, setLevel] = useState<string>(() =>
+		loadFromStorage(LOCAL_STORAGE_KEYS.level, initialLevel)
+	);
+
+	useEffect(() => {
+		saveToStorage(LOCAL_STORAGE_KEYS.level, level);
+	}, [level]);
 
 	// Sync title to localStorage
 	useEffect(() => {
@@ -78,7 +89,7 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 		setIsEditing(true);
 		loader.setProgress(0.25);
 		try {
-			await onSave(title, content);
+			await onSave(title, content, level);
 		} catch (error) {
 			console.error("Error saving note:", error);
 			toast.error("Note failed to add!");
@@ -174,6 +185,20 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 						)}
 					</div>
 				)}
+				<div className="flex gap-4">
+					{["LOW", "MEDIUM", "HIGH"].map((lvl, i) => (
+						<label key={lvl} className="flex items-center gap-2">
+							<input
+								type="radio"
+								name="level"
+								value={level}
+								checked={level === lvl}
+								onChange={() => setLevel(lvl)}
+							/>
+							{lvl}
+						</label>
+					))}
+				</div>
 
 				<div className="flex justify-end space-x-2">
 					<button

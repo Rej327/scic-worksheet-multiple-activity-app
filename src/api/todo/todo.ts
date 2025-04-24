@@ -26,7 +26,11 @@ export const getNoteById = async (id: string) => {
 	return data as Note;
 };
 
-export const createNote = async (title: string, content: string) => {
+export const createNote = async (
+	title: string,
+	content: string,
+	level: string
+) => {
 	const { data: userData } = await supabase.auth.getUser();
 
 	if (!userData.user) {
@@ -40,6 +44,7 @@ export const createNote = async (title: string, content: string) => {
 			{
 				title,
 				content,
+				level,
 				user_id: userData.user.id,
 			},
 		])
@@ -56,11 +61,12 @@ export const createNote = async (title: string, content: string) => {
 export const updateNote = async (
 	id: string,
 	title: string,
-	content: string
+	content: string,
+	level: string
 ) => {
 	const { data, error } = await supabase
 		.from("todos")
-		.update({ title, content, updated_at: new Date().toISOString() })
+		.update({ title, content, level, updated_at: new Date().toISOString() })
 		.eq("id", id)
 		.select();
 

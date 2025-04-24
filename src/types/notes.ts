@@ -2,6 +2,7 @@ export interface Note {
 	id: string;
 	title: string;
 	content: string;
+	level: string;
 	created_at: string;
 	updated_at: string;
 	user_id: string;

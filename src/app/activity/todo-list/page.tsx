@@ -134,9 +134,13 @@ export default function page() {
 	}, [modalType]);
 
 	// Handle creating a new note
-	const handleCreateNote = async (title: string, content: string) => {
+	const handleCreateNote = async (
+		title: string,
+		content: string,
+		level: string
+	) => {
 		try {
-			const newNote = await createNote(title, content);
+			const newNote = await createNote(title, content, level);
 			if (newNote) {
 				setNotes([newNote, ...notes]);
 				closeModal();
@@ -147,10 +151,10 @@ export default function page() {
 	};
 
 	// Handle updating a note
-	const handleUpdateNote = async (title: string, content: string) => {
+	const handleUpdateNote = async (title: string, content: string, level: string) => {
 		if (!selectedNote) return;
 
-		const updatedNote = await updateNote(selectedNote.id, title, content);
+		const updatedNote = await updateNote(selectedNote.id, title, content, level);
 		if (updatedNote) {
 			setNotes(
 				notes.map((note) =>

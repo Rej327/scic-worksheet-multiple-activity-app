@@ -5,6 +5,9 @@ import { NoteDetailProps } from "@/types/notes";
 export default function TodoDetail({ note, onEdit, onClose }: NoteDetailProps) {
 	return (
 		<div className="space-y-4">
+			<p className="capitalize bg-slate-400 w-fit rounded-full px-2">
+				{note.level}
+			</p>
 			<p className="border border-gray-300 shadow-md rounded-md p-4 bg-green-50 text-sm  focus:outline-none focus:shadow-md hover:shadow-md duration-300">
 				{note.content}
 			</p>

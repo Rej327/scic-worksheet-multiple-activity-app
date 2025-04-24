@@ -1,6 +1,7 @@
 export const LOCAL_STORAGE_KEYS = {
 	title: "draftTitle",
 	content: "draftContent",
+	level: "draftLevel",
 	todoTitle: "draftTodoTitle",
 	todoContent: "draftTodoContent",
 	pokemonTitle: "draftTitle",
