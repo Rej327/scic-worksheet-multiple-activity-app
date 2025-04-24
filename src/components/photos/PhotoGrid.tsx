@@ -224,7 +224,7 @@ const PhotoGrid = ({
 								</div>
 							</div>
 							<div className="text-center">
-								<h3 className="font-semibold text-lg mb-2 truncate text-green-950">
+								<h3 className="capitalize font-semibold text-lg mb-2 truncate text-green-950">
 									{photo.name}
 								</h3>
 								<div className="flex justify-between items-center text-xs text-gray-500">
@@ -303,13 +303,13 @@ const PhotoGrid = ({
 								<div className="flex justify-end space-x-2">
 									<button
 										onClick={() => setEditingPhoto(null)}
-										className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+										className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 cursor-pointer"
 									>
 										Cancel
 									</button>
 									<button
 										onClick={updatePhoto}
-										className="px-4 flex gap-1 items-center py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+										className="px-4 flex gap-1 items-center py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 cursor-pointer"
 										disabled={isSaving}
 									>
 										<span>
