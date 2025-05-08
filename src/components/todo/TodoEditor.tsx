@@ -110,6 +110,7 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 		onCancel();
 		setTitle("");
 		setContent("");
+		setLevel("");
 		loader.done();
 	};
 
@@ -185,19 +186,39 @@ const TodoEditor: React.FC<MarkdownEditorProps> = ({
 						)}
 					</div>
 				)}
+				<p className="mb-1 font-medium text-green-950">Select Level</p>
 				<div className="flex gap-4">
-					{["LOW", "MEDIUM", "HIGH"].map((lvl, i) => (
-						<label key={lvl} className="flex items-center gap-2">
-							<input
-								type="radio"
-								name="level"
-								value={level}
-								checked={level === lvl}
-								onChange={() => setLevel(lvl)}
-							/>
-							{lvl}
-						</label>
-					))}
+					{["LOW", "MEDIUM", "HIGH"].map((lvl) => {
+						const isSelected = level === lvl;
+						const levelColors: Record<string, string> = {
+							LOW: "border-green-500 text-green-700 bg-green-100",
+							MEDIUM: "border-yellow-500 text-yellow-700 bg-yellow-100",
+							HIGH: "border-red-500 text-red-700 bg-red-100",
+						};
+
+						return (
+							<label
+								key={lvl}
+								className={`flex items-center gap-2 px-3 py-1.5 rounded-full border cursor-pointer transition-all
+          ${
+				isSelected
+					? levelColors[lvl]
+					: "border-gray-300 text-gray-600 hover:bg-gray-100"
+			}
+        `}
+							>
+								<input
+									type="radio"
+									name="level"
+									value={lvl}
+									checked={isSelected}
+									onChange={() => setLevel(lvl)}
+									className="hidden"
+								/>
+								{lvl}
+							</label>
+						);
+					})}
 				</div>
 
 				<div className="flex justify-end space-x-2">

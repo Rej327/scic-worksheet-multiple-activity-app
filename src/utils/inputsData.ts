@@ -27,6 +27,7 @@ export const saveToStorage = (key: string, value: string) => {
 export const clearStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.title);
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.content);
+	localStorage.removeItem("draftLevel");
 };
 
 export const clearTodoStorage = () => {
@@ -63,4 +64,5 @@ export const resetStorage = () => {
 	localStorage.removeItem(LOCAL_STORAGE_KEYS.addDrive);
 	localStorage.removeItem("sortBy");
 	localStorage.removeItem("orderBy");
+	localStorage.removeItem("draftLevel");
 };

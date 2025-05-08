@@ -11,12 +11,23 @@ const TodoNotes: React.FC<TodoCardProps> = ({
 	onEditNote,
 	onDeleteNote,
 }) => {
+	const levelStyles: Record<string, string> = {
+		low: "bg-green-200 text-green-800",
+		medium: "bg-yellow-200 text-yellow-800",
+		high: "bg-red-200 text-red-800",
+	};
+
 	return (
 		<div
 			className="break-inside-avoid border border-green-100 rounded-lg p-4 bg-white shadow hover:shadow-xl hover:border-green-800 transition-shadow duration-300 delay-75 cursor-pointer"
 			onClick={() => onViewNote(note.id)}
 		>
-			<p className="capitalize bg-slate-400 w-fit rounded-full px-2">
+			<p
+				className={`capitalize w-fit rounded-full px-2 py-0.5 ml-auto text-xs font-medium ${
+					levelStyles[note.level.toLowerCase()] ||
+					"bg-gray-200 text-gray-800"
+				}`}
+			>
 				{note.level}
 			</p>
 			<h3 className="font-semibold text-lg mb-2 truncate text-green-950">
